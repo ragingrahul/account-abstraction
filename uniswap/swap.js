@@ -4,7 +4,7 @@ const {abi:SwapRouterABI} = require('@uniswap/v3-periphery/artifacts/contracts/i
 const ERC20ABI = require('./abi.json')
 require('dotenv').config()
 const JSBI=require('jsbi')
-const {AlphaRouter} = require('@uniswap/smart-order-router')
+const {AlphaRouter,SwapType} = require('@uniswap/smart-order-router')
 const {Token,CurrencyAmount,TradeType,Percent}=require('@uniswap/sdk-core')
 
 const ALCHEMY_URL_TESTNET=process.env.ALCHEMY_URL_TESTNET
@@ -47,25 +47,26 @@ const getPrice=async(inputAmount,slippageAmount,deadline,walletAddress)=>{
     
     const swapOptions={
         recipient:walletAddress,
-        slippageAmount:percentSlippage,
-        deadline:deadline
+        slippageTolerance:percentSlippage,
+        deadline:deadline,
+        type:SwapType.SWAP_ROUTER_02,
     }
 
     const route=await router.route(
         currencyAmount,
         UNI,
         TradeType.EXACT_INPUT,
-        //swapOptions
+        swapOptions
     )
 
-    // const transaction={
-    //     data:route.methodParameters.calldata,
-    //     to:swapRouterAddress,
-    //     value:BigNumber.from(route.methodParameters.value),
-    //     from:walletAddress,
-    //     gasPrice:BigNumber.from(route.gasPriceWei),
-    //     gasLimit:ethers.utils.hexlify(1000000)
-    // }
+    const transaction={
+        data:route.methodParameters.calldata,
+        to:swapRouterAddress,
+        value:BigNumber.from(route.methodParameters.value),
+        from:walletAddress,
+        gasPrice:BigNumber.from(route.gasPriceWei),
+        gasLimit:ethers.utils.hexlify(1000000)
+    }
 
     const quoteAmountOut=route.quote.toFixed(6)
     console.log(inputAmount,quoteAmountOut)
