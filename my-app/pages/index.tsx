@@ -16,7 +16,7 @@ const gaslessWalletConfig = {
 const loginConfig = {
   domains: ["http://localhost:3000"],
   chain: {
-    id: 80001,
+    id: 5,
     rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
   },
   openLogin: {
@@ -60,7 +60,7 @@ export default function Home() {
     }
   }
 
-  const generateQRCode = (address:String) => {
+  const generateQRCode = (address:string) => {
     QRCode.toDataURL(address).then((url:string) => setQRCode(url))
   }
 
