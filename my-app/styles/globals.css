@@ -2,12 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Cotta";
+  src: url("./fonts/Cotta-Regular.woff2") format("woff2"),
+    url("./fonts/Cotta-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sarabun";
+  src: url("./fonts/Sarabun-Regular.woff") format("woff2"),
+    url("./fonts/Sarabun-Regular.woff2") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -107,5 +125,19 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@layer components {
+  .landing-page-1 {
+    background: radial-gradient(
+        circle closest-corner at center 30vh,
+        rgb(6, 242, 168, 0.06),
+        rgba(39, 184, 138, 0.06),
+        rgba(68, 143, 119, 0.06),
+        rgba(63, 87, 80, 0.06),
+        rgb(25, 25, 25, 0.06) 50%
+      )
+      no-repeat;
   }
 }
