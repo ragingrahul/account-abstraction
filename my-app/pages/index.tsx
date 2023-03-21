@@ -82,9 +82,30 @@ export default function Home() {
     <div>
       <div className="bg-[#191919] h-screen w-screen">
         <div className="absolute top-0 left-0 h-[100vh] w-[100vw] landing-page-1 z-0"></div>
+        <div className="flex z-20 relative w-[100vw] h-[15vh] bg-transparent items-center justify-between">
+          <Image
+            src="/Logo.png"
+            height={387}
+            width={986}
+            alt="Logo"
+            className="h-[48px] w-[160px] ml-[5vw]"
+          />
+          <div className="flex w-fit h-fit mr-[5vw] items-center">
+            <div className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl">
+              <h1 className="font-[Sarabun] text-lg font-bold">Register</h1>
+            </div>
+            <Image
+              src="/PoweredGelato.png"
+              height={387}
+              width={986}
+              alt="Logo"
+              className="h-[50px] w-[110px] ml-[10px]"
+            />
+          </div>
+        </div>
         <div className="flex z-20 relative">
           <div className="w-[70vw]">
-            <div className="ml-[5vw] mt-[25vh]">
+            <div className="ml-[5vw] mt-[15vh]">
               <h1 className="text-[#ffffff] font-[Cotta] text-9xl">
                 Join the new era of Digital Finance
               </h1>
@@ -104,9 +125,24 @@ export default function Home() {
               height={1080}
               width={1920}
               alt="BgImage"
-              className="mt-[25vh] w-[50vw] max-w-[100vw] -left-[15vw] relative"
+              className="mt-[15vh] w-[50vw] max-w-[100vw] -left-[15vw] relative"
             />
           </div>
+        </div>
+      </div>
+      <div className="bg-[#191919] h-screen w-screen">
+        <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0"></div>
+        <div className="flex z-20 relative">
+          <div className="w-[30vw]">
+            <Image
+              src="/WalletRender.png"
+              width={4000}
+              height={2250}
+              alt="Wallet"
+              className="mt-[20vh] w-[60vw]  max-w-[100vw] -left-[7vw] relative"
+            ></Image>
+          </div>
+          <div className="w-[70vw]"></div>
         </div>
       </div>
     </div>

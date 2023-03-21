@@ -140,4 +140,16 @@ a {
       )
       no-repeat;
   }
+
+  .landing-page-2 {
+    background: radial-gradient(
+        circle closest-corner at 20vw,
+        rgb(6, 242, 168, 0.06),
+        rgba(39, 184, 138, 0.06),
+        rgba(68, 143, 119, 0.06),
+        rgba(63, 87, 80, 0.06),
+        rgb(25, 25, 25, 0.06) 50%
+      )
+      no-repeat;
+  }
 }
