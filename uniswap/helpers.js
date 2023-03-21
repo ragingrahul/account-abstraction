@@ -20,4 +20,6 @@ exports.getPoolState=async(poolContract)=>{
     const state={
         sqrtPriceX96:slot[0]
     }
+
+    return state
 }
