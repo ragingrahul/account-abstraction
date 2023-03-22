@@ -7,10 +7,11 @@ import {
   LoginConfig,
 } from "@gelatonetwork/gasless-onboarding";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import QRCode from "qrcode";
+import createScrollSnap from "scroll-snap";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
+  const container = useRef<HTMLDivElement>(null);
 
   const login = async () => {
     try {
@@ -78,9 +80,28 @@ export default function Home() {
     setAddress("");
   };
 
+  const bindScrollSnap = () => {
+    const element = container.current;
+    if (!element) return;
+    createScrollSnap(
+      element,
+      {
+        snapDestinationY: "100%",
+      },
+      () => console.log("snapped")
+    );
+  };
+
+  bindScrollSnap();
+
+  useEffect(() => {}, []);
   return (
-    <div>
-      <div className="bg-[#191919] h-screen w-screen z-0">
+    <div
+      className="flex flex-col flex-nowrap h-[100vh] w-[100vw] absolute top-0 left-0 overflow-auto overflow-x-hidden"
+      ref={container}
+    >
+      <div className="bg-[#191919] min-h-[100vh] w-[100vw] z-0 snap-center">
+        <div className="absolute top-0 left-0 h-[100vh] w-[100vw] landing-page-1 z-0"></div>
         <div className="absolute top-0 left-0 h-[100vh] w-[100vw] landing-page-1 z-0"></div>
         <div className="flex z-20 relative w-[100vw] h-[15vh] bg-transparent items-center justify-between">
           <Image
@@ -91,7 +112,10 @@ export default function Home() {
             className="h-[48px] w-[160px] ml-[5vw]"
           />
           <div className="flex w-fit h-fit mr-[5vw] items-center">
-            <div className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl">
+            <div
+              className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
+              onClick={login}
+            >
               <h1 className="font-[Sarabun] text-lg font-bold">Register</h1>
             </div>
             <Image
@@ -130,7 +154,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="bg-[#191919] h-screen w-screen">
+      <div className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center">
+        <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[90vh]"></div>
         <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[90vh]"></div>
         <div className="flex z-20 relative">
           <div className="w-[30vw]">
@@ -157,7 +182,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="bg-[#191919] h-screen w-screen">
+      <div className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center">
+        <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 -left-[25vw] top-[195vh]"></div>
         <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 -left-[25vw] top-[195vh]"></div>
         <div className="flex z-20 relative">
           <div className="w-[70vw]">
@@ -184,6 +210,35 @@ export default function Home() {
               alt="BgImage"
               className="mt-[25vh] w-[50vw] max-w-[100vw] -left-[10vw] relative"
             />
+          </div>
+        </div>
+      </div>
+      <div className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center">
+        <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[300vh]"></div>
+        <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[300vh]"></div>
+        <div className="flex z-20 relative">
+          <div className="w-[30vw]">
+            <Image
+              src="/ConversionRender.png"
+              width={4000}
+              height={2250}
+              alt="Wallet"
+              className="mt-[20vh] w-[55vw]  max-w-[100vw] relative"
+            ></Image>
+          </div>
+          <div className="w-[70vw]">
+            <div className="mr-[7vw] mt-[30vh] flex flex-col items-end">
+              <h1 className="text-[#ffffff] font-[Cotta] text-8xl text-right">
+                Seemless Onboarding <br /> powered by Web3Auth
+              </h1>
+              <h1 className="text-[#ffffff] font-[Sarabun] mt-10 text-2xl text-right">
+                Crypto for everyone - From curious to confident or from web2 to
+                web3
+              </h1>
+              <div className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]">
+                <h1 className="font-[Sarabun] text-lg font-bold">Learn More</h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>
