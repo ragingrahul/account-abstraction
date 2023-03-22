@@ -1,0 +1,91 @@
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { NextPage } from "next";
+import Image from "next/image";
+import { gsap } from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+interface Props {}
+
+const SectionOne: NextPage<Props> = (props: Props) => {
+  const imageRef = useRef<HTMLImageElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const comp = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: imageRef.current,
+        start: "top center",
+        toggleActions: "restart none reverse none",
+        markers: true,
+      });
+      tl.set(imageRef.current, {
+        x: "-10vw",
+        opacity: 0,
+      });
+      tl.to(imageRef.current, {
+        x: "0vw",
+        opacity: 1,
+        duration: 1,
+      });
+      const tl2 = gsap.timeline({
+        scrollTrigger: {
+          trigger: bodyRef.current,
+          start: "top center",
+          toggleActions: "restart none reverse none",
+        },
+      });
+      tl2.set(bodyRef.current, {
+        x: "+10vw",
+        opacity: 0,
+      });
+      tl2.to(bodyRef.current, {
+        x: "0vw",
+        opacity: 1,
+        duration: 1,
+      });
+    }, comp);
+
+    return () => ctx.revert();
+  });
+
+  return (
+    <div
+      className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center"
+      ref={comp}
+    >
+      <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[90vh]"></div>
+      <div className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 left-[35vw] top-[90vh]"></div>
+      <div className="flex z-20 relative">
+        <div className="w-[30vw]">
+          <Image
+            src="/WalletRender.png"
+            width={4000}
+            height={2250}
+            alt="Wallet"
+            className="mt-[20vh] w-[60vw]  max-w-[100vw] -left-[7vw] relative"
+            ref={imageRef}
+          ></Image>
+        </div>
+        <div className="w-[70vw]">
+          <div
+            className="mr-[7vw] mt-[25vh] flex flex-col items-end"
+            ref={bodyRef}
+          >
+            <h1 className="text-[#ffffff] font-[Cotta] text-9xl text-right">
+              The all-in-one <br /> crypto wallet
+            </h1>
+            <h1 className="text-[#ffffff] font-[Sarabun] mt-10 text-2xl text-right">
+              Ease of use & wide range of features packed in a single wallet
+            </h1>
+            <div className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]">
+              <h1 className="font-[Sarabun] text-lg font-bold">Learn More</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SectionOne;
