@@ -10,6 +10,8 @@ const SectionFour: NextPage<Props> = (props: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const comp = useRef<HTMLDivElement>(null);
+  const tower1Ref = useRef<HTMLImageElement>(null);
+  const tower2Ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -46,6 +48,38 @@ const SectionFour: NextPage<Props> = (props: Props) => {
         opacity: 1,
         duration: 1,
       });
+      const tl3 = gsap.timeline({
+        scrollTrigger: {
+          trigger: tower1Ref.current,
+          scrub: true,
+          end: "top 30%",
+        },
+      });
+      tl3.set(tower1Ref.current, {
+        scale: 0,
+        opacity: 0,
+      });
+      tl3.to(tower1Ref.current, {
+        scale: 1,
+        opacity: 0.7,
+        duration: 1,
+      });
+      const tl4 = gsap.timeline({
+        scrollTrigger: {
+          trigger: tower2Ref.current,
+          scrub: true,
+          end: "top 30%",
+        },
+      });
+      tl4.set(tower2Ref.current, {
+        scale: 0,
+        opacity: 0,
+      });
+      tl4.to(tower2Ref.current, {
+        scale: 1,
+        opacity: 0.7,
+        duration: 1,
+      });
     }, comp);
 
     return () => ctx.revert();
@@ -53,17 +87,33 @@ const SectionFour: NextPage<Props> = (props: Props) => {
 
   return (
     <div
-      className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center"
+      className="bg-[#191919] min-h-[100vh] w-[100vw] snap-center overflow-hidden relative"
       ref={comp}
     >
       <div
-        className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 top-[395vh]"
+        className="absolute h-[100vh] w-[100vw] landing-page-2 z-0"
         ref={imageRef}
       ></div>
       <div
-        className="absolute h-[100vh] w-[100vw] landing-page-2 z-0 top-[395vh]"
+        className="absolute h-[100vh] w-[100vw] landing-page-2 z-0"
         ref={imageRef}
       ></div>
+      <Image
+        src="/CoinTowerRender.png"
+        width={1920}
+        height={1080}
+        alt="Logo"
+        className="absolute w-[75vw] -left-[17vw] top-[30vh]"
+        ref={tower1Ref}
+      ></Image>
+      <Image
+        src="/CoinTowerRender.png"
+        width={1920}
+        height={1080}
+        alt="Logo"
+        className="absolute w-[75vw] left-[50vw] top-[40vh]"
+        ref={tower2Ref}
+      ></Image>
       <div className="flex flex-col justify-center items-center" ref={bodyRef}>
         <Image
           src="/Logo.png"

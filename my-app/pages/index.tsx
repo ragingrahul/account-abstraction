@@ -17,6 +17,8 @@ import SectionOne from "@/components/SectionOne";
 import SectionTwo from "@/components/SectionTwo";
 import SectionThree from "@/components/SectionThree";
 import SectionFour from "@/components/SectionFour";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { gsap } from "gsap";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,6 +45,7 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
+  const comp = useRef<HTMLDivElement>(null);
 
   const login = async () => {
     try {
@@ -84,9 +87,20 @@ export default function Home() {
     setAddress("");
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.create({
+      snap: {
+        snapTo: 1 / 4,
+        duration: 2,
+      },
+    });
+  }, []);
   return (
-    <div className="flex flex-col flex-nowrap h-fit w-[100vw] overflow-auto overflow-x-hidden">
+    <div
+      className="flex flex-col flex-nowrap h-fit w-[100vw] overflow-auto overflow-x-hidden"
+      ref={comp}
+    >
       <LandingWindow login={login} />
       <SectionOne />
       <SectionTwo />
