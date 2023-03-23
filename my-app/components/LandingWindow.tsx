@@ -16,24 +16,30 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     let ctx = gsap.context(() => {
-      const tl = gsap.timeline();
-      tl.set(imageRef.current, {
-        x: "+10vw",
-        opacity: 0,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: imageRef.current,
+          start: "90% 80%",
+          scrub: true,
+          end: "160% top",
+        },
       });
       tl.to(imageRef.current, {
-        x: "0vw",
-        opacity: 1,
+        scale: 0,
+        opacity: 0,
         duration: 1,
       });
-      const tl2 = gsap.timeline();
-      tl2.set(bodyRef.current, {
-        x: "-10vw",
-        opacity: 0,
+      const tl2 = gsap.timeline({
+        scrollTrigger: {
+          trigger: imageRef.current,
+          start: "90% 80%",
+          scrub: true,
+          end: "160% top",
+        },
       });
       tl2.to(bodyRef.current, {
-        x: "0vw",
-        opacity: 1,
+        x: "-10vw",
+        opacity: 0,
         duration: 1,
       });
     }, comp);
