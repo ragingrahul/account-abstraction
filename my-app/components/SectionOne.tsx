@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { NextPage } from "next";
 import Image from "next/image";
 import { gsap } from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 interface Props {}
 
@@ -12,27 +12,29 @@ const SectionOne: NextPage<Props> = (props: Props) => {
   const comp = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({
-        scrollTrigger: imageRef.current,
-        start: "top center",
-        toggleActions: "restart none reverse none",
-        markers: true,
+        scrollTrigger: {
+          trigger: imageRef.current,
+          scrub: true,
+          end: "bottom 80%",
+        },
       });
       tl.set(imageRef.current, {
-        x: "-10vw",
+        scale: 0,
         opacity: 0,
       });
       tl.to(imageRef.current, {
-        x: "0vw",
+        scale: 1,
         opacity: 1,
         duration: 1,
       });
       const tl2 = gsap.timeline({
         scrollTrigger: {
           trigger: bodyRef.current,
-          start: "top center",
-          toggleActions: "restart none reverse none",
+          scrub: true,
+          end: "bottom 80%",
         },
       });
       tl2.set(bodyRef.current, {

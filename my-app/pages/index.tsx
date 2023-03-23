@@ -43,7 +43,6 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
-  const container = useRef<HTMLDivElement>(null);
 
   const login = async () => {
     try {
@@ -85,22 +84,9 @@ export default function Home() {
     setAddress("");
   };
 
-  const bindScrollSnap = () => {
-    const element = container.current;
-    if (!element) return;
-    createScrollSnap(element, {
-      snapDestinationY: "100%",
-    });
-  };
-
-  useEffect(() => {
-    bindScrollSnap();
-  }, []);
+  useEffect(() => {}, []);
   return (
-    <div
-      className="flex flex-col flex-nowrap h-[100vh] w-[100vw] absolute top-0 left-0 overflow-auto overflow-x-hidden"
-      ref={container}
-    >
+    <div className="flex flex-col flex-nowrap h-fit w-[100vw] overflow-auto overflow-x-hidden">
       <LandingWindow login={login} />
       <SectionOne />
       <SectionTwo />

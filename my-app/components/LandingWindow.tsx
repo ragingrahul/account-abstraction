@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { NextPage } from "next";
 import Image from "next/image";
 import { gsap } from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 interface Props {
   login: () => void;
@@ -14,6 +14,7 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
   const comp = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     let ctx = gsap.context(() => {
       const tl = gsap.timeline();
       tl.set(imageRef.current, {
@@ -24,11 +25,6 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
         x: "0vw",
         opacity: 1,
         duration: 1,
-        scrollTrigger: {
-          trigger: comp.current,
-          start: "top bottom",
-          end: "bottom top",
-        },
       });
       const tl2 = gsap.timeline();
       tl2.set(bodyRef.current, {
@@ -39,11 +35,6 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
         x: "0vw",
         opacity: 1,
         duration: 1,
-        scrollTrigger: {
-          trigger: comp.current,
-          start: "top bottom",
-          end: "bottom top",
-        },
       });
     }, comp);
 
