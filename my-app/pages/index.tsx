@@ -11,7 +11,6 @@ import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import QRCode from "qrcode";
-import createScrollSnap from "scroll-snap";
 import LandingWindow from "@/components/LandingWindow";
 import SectionOne from "@/components/SectionOne";
 import SectionTwo from "@/components/SectionTwo";
