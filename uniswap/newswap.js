@@ -50,11 +50,7 @@ async function singleswap(){
         gasLimit:ethers.utils.hexlify(1000000)
     }
 
-    //const approvalAmount=(amountIn * 100000).toString()
-    // const approveData=await wethContract.connect(signer).approve(
-    //     V3SwapRouterAddress,
-    //     20000000000
-    // )
+    
     const tx=await signer.sendTransaction(txArgs)
     console.log('tx',tx)
     const receipt= await tx.wait()
