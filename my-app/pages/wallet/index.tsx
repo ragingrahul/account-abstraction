@@ -1,9 +1,29 @@
 import WalletProp from "@/components/Wallet";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { gsap } from "gsap";
+import SendProp from "@/components/Send";
+import RecieveProp from "@/components/Recieve";
+import MoreProp from "@/components/More";
 
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("wallet");
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+    tl.set(".active", { opacity: 0, scale: 0 });
+    tl.to(".active", {
+      opacity: 1,
+      scale: 1,
+      duration: 0.5,
+    });
+    const tl2 = gsap.timeline();
+    tl2.set(".inactive", {
+      opacity: 0,
+      scale: 0,
+    });
+  }, [menuToggle]);
+
   return (
     <div className="bg-[#191919] h-fit min-h-[100vh] w-[100vw] snap-center">
       <div className="flex z-20 relative w-[100vw] h-[15vh] bg-transparent items-center justify-between">
@@ -29,7 +49,23 @@ export default function Wallet() {
       </div>
       <div className="w-[100vw] h-fit flex justify-center">
         <div className="h-[725px] w-[440px] bg-[#000000] rounded-[2rem] border-[10px] border-[#232323] flex flex-col items-center">
-          <WalletProp />
+          {menuToggle === "wallet" && (
+            <WalletProp
+              Class={menuToggle === "wallet" ? "active" : "inactive"}
+            />
+          )}
+          {menuToggle === "send" && (
+            <SendProp Class={menuToggle === "send" ? "active" : "inactive"} />
+          )}
+          {menuToggle === "recieve" && (
+            <RecieveProp
+              Class={menuToggle === "recieve" ? "active" : "inactive"}
+            />
+          )}
+          {menuToggle === "more" && (
+            <MoreProp Class={menuToggle === "more" ? "active" : "inactive"} />
+          )}
+
           <div className="flex flex-col flex-grow w-[100%] justify-end">
             <div className="bg-[#232323] h-[85px] w-[100%] flex justify-between ">
               <div
