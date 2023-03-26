@@ -11,6 +11,9 @@ const MoreProp: NextPage<Props> = (props: Props) => {
     <>
       <div
         className={`transition-colors duration-300 flex h-[15%] w-[90%] bg-[#232323] items-center mt-6 rounded-3xl justify-between ${props.Class} hover:bg-[#3d3d3d] hover:cursor-pointer`}
+        onClick={() => {
+          window.location.href = "/more";
+        }}
       >
         <div className="flex flex-col justify-center">
           <h1 className="font-[GrayfelDemi] text-[#ffffff] ml-8 text-[1.75rem]">
@@ -23,6 +26,9 @@ const MoreProp: NextPage<Props> = (props: Props) => {
       </div>
       <div
         className={`transition-colors duration-300 flex h-[15%] w-[90%] bg-[#232323] items-center mt-6 rounded-3xl justify-between ${props.Class} hover:bg-[#3d3d3d] hover:cursor-pointer`}
+        onClick={() => {
+          window.location.href = "/more";
+        }}
       >
         <div className="flex flex-col justify-center">
           <h1 className="font-[GrayfelDemi] text-[#ffffff] ml-8 text-[1.75rem]">
