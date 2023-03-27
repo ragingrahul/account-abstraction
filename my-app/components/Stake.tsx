@@ -25,7 +25,7 @@ const StakeProp: NextPage<Props> = (props: Props) => {
         className={` transition-shadow duration-300 ease-linear flex flex-col h-[25%] w-[90%] bg-[#06f2a8] rounded-2xl justify-center items-center hover:shadow-[#06f2a8] hover:shadow-2xl z-20 ${props.Class}`}
       >
         <h1 className="font-[GrayfelDemi] text-[#616161] text-[1.5rem] text-base">
-          Simpl Balance
+          Simpl Staked
         </h1>
         <h1 className="font-[GrayfelDemi] text-[#000000] text-7xl mt-2">
           267.23
@@ -40,6 +40,13 @@ const StakeProp: NextPage<Props> = (props: Props) => {
       >
         <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2">
           Buy Tokens
+        </h1>
+      </div>
+      <div
+        className={` transition-shadow duration-300 ease-linear flex flex-col h-[10%] w-[90%] bg-[#06f2a8] rounded-2xl justify-center items-center hover:shadow-[#06f2a8] hover:shadow-2xl z-20 mt-6 ${props.Class}`}
+      >
+        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2">
+          Unstake Tokens
         </h1>
       </div>
     </>
