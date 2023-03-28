@@ -18,6 +18,7 @@ import SectionThree from "@/components/SectionThree";
 import SectionFour from "@/components/SectionFour";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { gsap } from "gsap";
+import LoadingProp from "@/components/LoadingScreen";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,10 +45,13 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
+  const [isLoading, setIsLoading] = useState(false);
   const comp = useRef<HTMLDivElement>(null);
 
   const login = async () => {
     try {
+      setIsLoading(true);
+
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
@@ -57,6 +61,8 @@ export default function Home() {
       const web3AuthProvider = await gaslessOnboarding.login();
       setWeb3AuthProvider(web3AuthProvider);
       setGaslessOnboarding(gaslessOnboarding);
+
+      setIsLoading(false);
 
       const gaslessWallet = gaslessOnboarding.getGaslessWallet();
       setGaslessWallet(gaslessWallet);
@@ -68,8 +74,12 @@ export default function Home() {
 
       const userInfo = await gaslessOnboarding.getUserInfo();
       setUserInfo(userInfo);
+
+      window.location.href = "/wallet";
     } catch (error) {
       console.log(error);
+
+      setIsLoading(false);
     }
   };
 
@@ -105,6 +115,13 @@ export default function Home() {
       <SectionTwo />
       <SectionThree />
       <SectionFour />
+      <LoadingProp
+        isLoading={isLoading}
+        title="Signing In"
+        desc="Processing sign in through Web3Auth"
+        login={login}
+        isLogin={true}
+      />
     </div>
   );
 }
