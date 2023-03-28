@@ -5,9 +5,93 @@ import { gsap } from "gsap";
 import SendProp from "@/components/Send";
 import RecieveProp from "@/components/Recieve";
 import MoreProp from "@/components/More";
+import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
+import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
+import QRCode from "qrcode";
+import {
+  GaslessOnboarding,
+  GaslessWalletConfig,
+  LoginConfig,
+} from "@gelatonetwork/gasless-onboarding";
+import LoadingProp from "@/components/LoadingScreen";
+
+const gaslessWalletConfig = {
+  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+};
+const loginConfig = {
+  domains: ["http://localhost:3000"],
+  chain: {
+    id: 5,
+    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+  },
+  openLogin: {
+    redirectUrl: "",
+  },
+};
 
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("wallet");
+  const [gaslessOnboarding, setGaslessOnboarding] =
+    useState<GaslessOnboarding>();
+  const [web3AuthProvider, setWeb3AuthProvider] =
+    useState<SafeEventEmitterProvider>();
+  const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
+  const [address, setAddress] = useState("");
+  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
+  const [qrCode, setQRCode] = useState<string | null>();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const login = async () => {
+    try {
+      setIsLoading(true);
+
+      const gaslessOnboarding = new GaslessOnboarding(
+        loginConfig as LoginConfig,
+        gaslessWalletConfig as GaslessWalletConfig
+      );
+      await gaslessOnboarding.init();
+
+      const web3AuthProvider = await gaslessOnboarding.login();
+      setWeb3AuthProvider(web3AuthProvider);
+      setGaslessOnboarding(gaslessOnboarding);
+
+      setIsLoading(false);
+
+      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
+      setGaslessWallet(gaslessWallet);
+
+      const address = gaslessWallet.getAddress();
+      setAddress(address);
+      console.log(address);
+      generateQRCode(address);
+
+      const userInfo = await gaslessOnboarding.getUserInfo();
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.log(error);
+      window.location.href = "/";
+      setIsLoading(false);
+    }
+  };
+
+  const generateQRCode = (address: string) => {
+    QRCode.toDataURL(address).then((url: string) => setQRCode(url));
+  };
+
+  const logout = async () => {
+    await gaslessOnboarding?.logout();
+
+    setGaslessOnboarding(undefined);
+    setWeb3AuthProvider(undefined);
+    setGaslessWallet(undefined);
+    setAddress("");
+
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    login();
+  }, []);
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -35,7 +119,10 @@ export default function Wallet() {
           className="h-[48px] w-[160px] ml-[5vw]"
         />
         <div className="flex w-fit h-fit mr-[5vw] items-center">
-          <div className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl">
+          <div
+            className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
+            onClick={logout}
+          >
             <h1 className="font-[Sarabun] text-lg font-bold">Logout</h1>
           </div>
           <Image
@@ -52,6 +139,7 @@ export default function Wallet() {
           {menuToggle === "wallet" && (
             <WalletProp
               Class={menuToggle === "wallet" ? "active" : "inactive"}
+              address={address}
             />
           )}
           {menuToggle === "send" && (
@@ -60,6 +148,8 @@ export default function Wallet() {
           {menuToggle === "recieve" && (
             <RecieveProp
               Class={menuToggle === "recieve" ? "active" : "inactive"}
+              address={address}
+              qrUrl={qrCode ? qrCode : ""}
             />
           )}
           {menuToggle === "more" && (
@@ -176,6 +266,13 @@ export default function Wallet() {
           </div>
         </div>
       </div>
+      <LoadingProp
+        isLoading={isLoading}
+        title="Signing In"
+        desc="Processing sign in through Web3Auth"
+        login={login}
+        isLogin={true}
+      />
     </div>
   );
 }

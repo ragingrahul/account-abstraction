@@ -54,7 +54,7 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
     >
       <div className="absolute top-0 left-0 h-[100vh] w-[100vw] landing-page-1 z-0"></div>
       <div className="absolute top-0 left-0 h-[100vh] w-[100vw] landing-page-1 z-0"></div>
-      <div className="flex z-20 relative w-[100vw] h-[15vh] bg-transparent items-center justify-between">
+      <div className="flex z-20 w-[100vw] h-[15vh] bg-transparent items-center justify-between">
         <Image
           src="/Logo.png"
           height={387}
@@ -64,7 +64,7 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
         />
         <div className="flex w-fit h-fit mr-[5vw] items-center">
           <div
-            className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
+            className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] z-50 hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
             onClick={props.login}
           >
             <h1 className="font-[Sarabun] text-lg font-bold">Register</h1>
