@@ -1,12 +1,182 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import Listing from "./Listing";
+import {
+  GaslessOnboarding,
+  GaslessWalletConfig,
+  LoginConfig,
+} from "@gelatonetwork/gasless-onboarding";
+import { useEffect, useState, useRef, useLayoutEffect, Provider } from "react";
+import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
+import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
+import { ethers } from "ethers";
+const { abi: QuoterAbi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json')
+const { abi: Quoter2Abi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json')
 
 interface Props {
   Class: string;
 }
+const gaslessWalletConfig = {
+  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+};
+const loginConfig = {
+  domains: ["http://localhost:3000"],
+  chain: {
+    id: 5,
+    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+  },
+  openLogin: {
+    redirectUrl: "http://localhost:3000",
+  },
+};
+
+
+const WETH_ADDRESS = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
+const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+const QUOTER2_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e'
 
 const RangeProp: NextPage<Props> = (props: Props) => {
+  const [gaslessOnboarding, setGaslessOnboarding] =
+    useState<GaslessOnboarding>();
+  const [web3AuthProvider, setWeb3AuthProvider] =
+    useState<SafeEventEmitterProvider>();
+  const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
+  const [address, setAddress] = useState("");
+  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
+  const [qrCode, setQRCode] = useState<string | null>();
+  const comp = useRef<HTMLDivElement>(null);
+  const [givenValue, setGivenValue] = useState<string>()
+  const [targetValue, setTargetValue] = useState<string>()
+  const [uniPrice, setUniPrice] = useState<string>()
+  const tokenIn = WETH_ADDRESS
+  const tokenOut = UNI_ADDRESS
+  const fee = '3000'
+  const sqrtPriceLimitX96 = '0'
+
+  // const getProviderOrSigner=async(flag:boolean)=>{
+  //   if(web3AuthProvider){
+  //     if(flag){
+  //       const provider = new ethers.providers.Web3Provider(web3AuthProvider);
+  //       const signer=provider.getSigner()
+  //       return signer;
+  //     } 
+  //     else{
+  //       const provider = new ethers.providers.Web3Provider(web3AuthProvider)
+  //       return provider;
+  //     }
+  //   }
+  // }
+
+
+  const login = async () => {
+    try {
+      const gaslessOnboarding = new GaslessOnboarding(
+        loginConfig as LoginConfig,
+        gaslessWalletConfig as GaslessWalletConfig
+      );
+      await gaslessOnboarding.init();
+
+      const web3AuthProvider = await gaslessOnboarding.login();
+      setWeb3AuthProvider(web3AuthProvider);
+      setGaslessOnboarding(gaslessOnboarding);
+
+
+      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
+      setGaslessWallet(gaslessWallet);
+
+      const address = gaslessWallet.getAddress();
+      setAddress(address);
+      console.log(address);
+
+
+      const userInfo = await gaslessOnboarding.getUserInfo();
+      setUserInfo(userInfo);
+      console.log(userInfo);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const sendEth = async () => {
+    try {
+      if (givenValue) {
+        const wei = ethers.utils.parseEther(givenValue)
+
+        if (web3AuthProvider) {
+          const provider = new ethers.providers.Web3Provider(web3AuthProvider);
+          const signer = provider.getSigner();
+
+          const tempaddress = await signer.getAddress();
+
+          const balance = ethers.utils.formatEther(
+            await provider.getBalance(tempaddress)
+          );
+          console.log(balance, tempaddress)
+          let receiverAddress = '0x3078f7A277A1b24E3Dc2c68ae4b43D5a6153F631'
+          let tx = {
+            to: receiverAddress,
+            value: wei,
+          }
+          signer.sendTransaction(tx).then((txObj) => { console.log('tx.hash:', txObj.hash) })
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+
+
+  }
+
+  const cancelOrder = async () => {
+
+  }
+
+  const getPrice = async () => {
+    
+    
+    try {
+      if (givenValue) {
+        if (web3AuthProvider) {
+          
+          const provider = new ethers.providers.Web3Provider(web3AuthProvider)
+          console.log(provider)
+         
+          const quoter2 = new ethers.Contract(
+            QUOTER2_ADDRESS,
+            Quoter2Abi,
+            provider
+          )
+          console.log(quoter2)
+          const params = {
+            tokenIn: tokenIn,
+            tokenOut: tokenOut,
+            fee: fee,
+            amountIn: ethers.utils.parseEther(givenValue),
+            sqrtPriceLimitX96: sqrtPriceLimitX96,
+          }
+          console.log(params)
+          const output = await quoter2.callStatic.quoteExactInputSingle(params)
+          setUniPrice(ethers.utils.formatUnits(output.amountOut.toString()))
+          console.log(ethers.utils.formatUnits(output.amountOut.toString()))
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    
+  }
+
+
+  useEffect(() => {
+    login()
+    console.log(userInfo)
+  }, [])
+
+  useEffect(()=>{
+    getPrice()
+  },[givenValue])
+
   return (
     <>
       <h1
@@ -15,22 +185,35 @@ const RangeProp: NextPage<Props> = (props: Props) => {
         Place Range Order
       </h1>
       <input
+        type="number"
         className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none`}
-        placeholder="Enter Amount"
+        placeholder="Enter Amount in ETH"
+        onChange={(e)=>{setGivenValue(e.target.value)}}
+
       />
-      <input
-        className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none`}
-        placeholder="Enter Lower Limit"
-      />
+      <div
+        className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none flex items-center`}
+
+      >
+        {givenValue ? uniPrice : `Amount in UNI`}
+      </div>
       <input
         className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none`}
         placeholder="Enter Upper Limit"
+        onChange={(e)=>setTargetValue(e.target.value)}
       />
       <div
         className={` transition-shadow duration-300 ease-linear flex flex-col h-[15%] w-[90%] bg-[#06f2a8] rounded-2xl justify-center items-center hover:shadow-[#06f2a8] hover:shadow-2xl z-20 mt-6 ${props.Class}`}
       >
-        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2">
+        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2 hover:cursor-pointer" onClick={sendEth}>
           Place Order
+        </h1>
+      </div>
+      <div
+        className={` transition-shadow duration-300 ease-linear flex flex-col h-[15%] w-[90%] bg-[#06f2a8] rounded-2xl justify-center items-center hover:shadow-[#06f2a8] hover:shadow-2xl z-20 mt-6 ${props.Class}`}
+      >
+        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2 hover:cursor-pointer" onClick={cancelOrder}>
+          Cancel Order
         </h1>
       </div>
     </>
