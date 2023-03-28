@@ -12,6 +12,7 @@ import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
 const { abi: QuoterAbi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json')
 const { abi: Quoter2Abi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json')
+import { dataStoreContract, dataStoreContractABI } from "@/constants";
 
 interface Props {
   Class: string;
@@ -97,6 +98,18 @@ const RangeProp: NextPage<Props> = (props: Props) => {
     }
   };
 
+  // const getEhereumContract = async () => {
+  //   if (web3AuthProvider) {
+  //     const provider = new ethers.providers.Web3Provider(web3AuthProvider);
+  //     const signer = provider.getSigner();
+    
+
+  //   const dataContract = new ethers.Contract(transactionAddress, transactionABI, signer)
+
+  //   return transactionContract
+  //   }
+  // }
+
   const sendEth = async () => {
     try {
       if (givenValue) {
@@ -133,15 +146,15 @@ const RangeProp: NextPage<Props> = (props: Props) => {
   }
 
   const getPrice = async () => {
-    
-    
+
+
     try {
       if (givenValue) {
         if (web3AuthProvider) {
-          
+
           const provider = new ethers.providers.Web3Provider(web3AuthProvider)
           console.log(provider)
-         
+
           const quoter2 = new ethers.Contract(
             QUOTER2_ADDRESS,
             Quoter2Abi,
@@ -164,7 +177,27 @@ const RangeProp: NextPage<Props> = (props: Props) => {
     } catch (error) {
       console.error(error)
     }
-    
+
+  }
+  const random = async () => {
+    try {
+      let param={
+        givenValue:ethers.utils.parseEther('1'),
+        targetValue:ethers.utils.parseEther('4')
+      }
+      let dataStore=new ethers.utils.Interface(dataStoreContractABI)
+      let x=dataStore.encodeFunctionData("swapStart",[ethers.utils.parseEther('1'),ethers.utils.parseEther('4')])
+      console.log(x)
+
+      const res =await gaslessWallet?.sponsorTransaction(
+        dataStoreContract,
+        x
+      )
+      console.log(res?.taskId)
+      
+    } catch (error) {
+      console.error(error)
+    }
   }
 
 
@@ -173,9 +206,9 @@ const RangeProp: NextPage<Props> = (props: Props) => {
     console.log(userInfo)
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     getPrice()
-  },[givenValue])
+  }, [givenValue])
 
   return (
     <>
@@ -188,7 +221,7 @@ const RangeProp: NextPage<Props> = (props: Props) => {
         type="number"
         className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none`}
         placeholder="Enter Amount in ETH"
-        onChange={(e)=>{setGivenValue(e.target.value)}}
+        onChange={(e) => { setGivenValue(e.target.value) }}
 
       />
       <div
@@ -200,12 +233,12 @@ const RangeProp: NextPage<Props> = (props: Props) => {
       <input
         className={`rounded-2xl w-[90%] h-[60px] text-2xl px-3 font-[GrayfelDemi] mt-6 ${props.Class} bg-[#232323] text-[#868686] placeholder:text-[#868686] focus:outline-none`}
         placeholder="Enter Upper Limit"
-        onChange={(e)=>setTargetValue(e.target.value)}
+        onChange={(e) => setTargetValue(e.target.value)}
       />
       <div
         className={` transition-shadow duration-300 ease-linear flex flex-col h-[15%] w-[90%] bg-[#06f2a8] rounded-2xl justify-center items-center hover:shadow-[#06f2a8] hover:shadow-2xl z-20 mt-6 ${props.Class}`}
       >
-        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2 hover:cursor-pointer" onClick={sendEth}>
+        <h1 className="font-[GrayfelDemi] text-[#000000] text-4xl mt-2 hover:cursor-pointer" onClick={random}>
           Place Order
         </h1>
       </div>
