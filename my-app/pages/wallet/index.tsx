@@ -101,9 +101,9 @@ export default function Wallet() {
       const gaslessWallet = gaslessOnboarding.getGaslessWallet();
       setGaslessWallet(gaslessWallet);
 
-      const address = gaslessWallet.getAddress();
+      const web3 = new Web3(web3AuthProvider as any);
+      const address = (await web3.eth.getAccounts())[0];
       setAddress(address);
-      console.log(address);
       generateQRCode(address);
 
       const userInfo = await gaslessOnboarding.getUserInfo();
