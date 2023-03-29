@@ -1,95 +1,262 @@
-export const dataStoreContract="0x99B54B04771C33f0794BE705d87E79d7314B122a"
-export const dataStoreContractABI=[
+export const dataStoreContract = "0x99B54B04771C33f0794BE705d87E79d7314B122a";
+export const dataStoreContractABI = [
   {
-    "inputs": [],
-    "name": "getMemberCount",
-    "outputs": [
+    inputs: [],
+    name: "getMemberCount",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "count",
+        type: "uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
-    "name": "orderMembers",
-    "outputs": [
+    name: "orderMembers",
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: "view",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "receiver",
-        "type": "address"
+        internalType: "address",
+        name: "receiver",
+        type: "address",
       },
       {
-        "internalType": "uint256",
-        "name": "index",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
     ],
-    "name": "swapDone",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "swapDone",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "givenValue",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "givenValue",
+        type: "uint256",
       },
       {
-        "internalType": "uint256",
-        "name": "targetValue",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "targetValue",
+        type: "uint256",
+      },
     ],
-    "name": "swapStart",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: "swapStart",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
-    "name": "userData",
-    "outputs": [
+    name: "userData",
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "givenvalue",
-        "type": "uint256"
+        internalType: "uint256",
+        name: "givenvalue",
+        type: "uint256",
       },
       {
-        "internalType": "uint256",
-        "name": "targetvalue",
-        "type": "uint256"
-      }
+        internalType: "uint256",
+        name: "targetvalue",
+        type: "uint256",
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+    stateMutability: "view",
+    type: "function",
+  },
+];
+export const stakeContract = "0x8590CFD32B4ADcEaD15d498Cf9DE10E51Ef58Eba";
+export const stakeContractABI = [
+  {
+    inputs: [
+      {
+        internalType: "contract TokenERC20",
+        name: "_erc20TokenAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "message",
+        type: "string",
+      },
+    ],
+    name: "issueToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "stakeToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "unstakeToken",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "issueTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "stakeTokens",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "stakers",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "stakingInfo",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "stakingBalance",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "hasStaked",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "token",
+    outputs: [
+      {
+        internalType: "contract TokenERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokensPerGETH",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "unstakeTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
