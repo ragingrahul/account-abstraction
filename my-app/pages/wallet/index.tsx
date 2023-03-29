@@ -8,12 +8,15 @@ import MoreProp from "@/components/More";
 import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import QRCode from "qrcode";
+import Web3 from "web3";
 import {
   GaslessOnboarding,
   GaslessWalletConfig,
   LoginConfig,
 } from "@gelatonetwork/gasless-onboarding";
 import LoadingProp from "@/components/LoadingScreen";
+import { ethers } from "ethers";
+import { useContract, useTokenBalance } from "@thirdweb-dev/react";
 
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
@@ -39,7 +42,45 @@ export default function Wallet() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingSend, setIsLoadingSend] = useState(false);
+  const [isLoadingLogout, setIsLoadingLogout] = useState(false);
+  const [balance, setBalance] = useState<string | null>();
+  const [EthBalance, setEthBalance] = useState<string>();
+  const [SimplBalance, setSimplBalance] = useState<string>();
+  const { contract } = useContract(
+    "0x2B8F9a05D88fBc5352885a15D241464b704b259A",
+    "token"
+  );
+
+  const getBalance = async () => {
+    const web3 = new Web3(web3AuthProvider as any);
+
+    const address = (await web3.eth.getAccounts())[0];
+    setAddress(address);
+
+    if (!address) return;
+    const SimplBalance = await contract?.balanceOf(address);
+    setSimplBalance(
+      SimplBalance
+        ? web3.utils.fromWei(SimplBalance?.value.toString()).toString()
+        : "0"
+    );
+    console.log(SimplBalance?.value.toString());
+
+    const EthBalance = web3.utils.fromWei(await web3.eth.getBalance(address));
+    setEthBalance(EthBalance);
+
+    const balance =
+      EthBalance + ((SimplBalance?.value as any) / 20000).toString();
+    setBalance(balance.toString());
+  };
+
+  useEffect(() => {
+    if (!isLoading) {
+      getBalance();
+    }
+  }, [isLoading]);
 
   const login = async () => {
     try {
@@ -79,6 +120,7 @@ export default function Wallet() {
   };
 
   const logout = async () => {
+    setIsLoadingLogout(true);
     await gaslessOnboarding?.logout();
 
     setGaslessOnboarding(undefined);
@@ -87,6 +129,7 @@ export default function Wallet() {
     setAddress("");
 
     window.location.href = "/";
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -140,10 +183,18 @@ export default function Wallet() {
             <WalletProp
               Class={menuToggle === "wallet" ? "active" : "inactive"}
               address={address}
+              EthBalance={EthBalance ? EthBalance : "0"}
+              SimplBalance={SimplBalance ? SimplBalance : "0"}
+              balance={balance ? balance : "0"}
             />
           )}
           {menuToggle === "send" && (
-            <SendProp Class={menuToggle === "send" ? "active" : "inactive"} />
+            <SendProp
+              Class={menuToggle === "send" ? "active" : "inactive"}
+              web3AuthProvider={web3AuthProvider}
+              setIsLoading={setIsLoadingSend}
+              fromAddress={address}
+            />
           )}
           {menuToggle === "recieve" && (
             <RecieveProp
@@ -272,6 +323,20 @@ export default function Wallet() {
         desc="Processing sign in through Web3Auth"
         login={login}
         isLogin={true}
+      />
+      <LoadingProp
+        isLoading={isLoadingSend}
+        title="Sending"
+        desc="Sending Transaction to the destination"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingLogout}
+        title="Logging Out"
+        desc="Logging out from Web3Auth"
+        login={login}
+        isLogin={false}
       />
     </div>
   );

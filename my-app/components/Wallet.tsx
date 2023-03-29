@@ -5,6 +5,9 @@ import Listing from "./Listing";
 interface Props {
   Class: string;
   address: string;
+  balance: string;
+  EthBalance: string;
+  SimplBalance: string;
 }
 
 const WalletProp: NextPage<Props> = (props: Props) => {
@@ -40,19 +43,25 @@ const WalletProp: NextPage<Props> = (props: Props) => {
           Total Balance
         </h1>
         <h1 className="font-[GrayfelDemi] text-[#000000] text-7xl mt-2">
-          $8,567.17
+          {props.balance.substring(0, 7)}
         </h1>
       </div>
       <Listing
         Symbol="gETH"
         Name="Goerli Ethereum"
-        Balance={45.76}
+        Balance={props.EthBalance.substring(0, 7)}
         Class={props.Class}
       />
       <Listing
-        Symbol="AVAX"
-        Name="Avalanche"
-        Balance={2565.23}
+        Symbol="SMPL"
+        Name="Simpl Token"
+        Balance={props.SimplBalance}
+        Class={props.Class}
+      />
+      <Listing
+        Symbol="UNI"
+        Name="Uniswap Token"
+        Balance={"0"}
         Class={props.Class}
       />
     </>
