@@ -10,12 +10,16 @@ import { useEffect, useState, useRef, useLayoutEffect, Provider } from "react";
 import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
-const { abi: QuoterAbi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json')
 const { abi: Quoter2Abi } = require('@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json')
 import { dataStoreContract, dataStoreContractABI } from "@/constants";
 
 interface Props {
   Class: string;
+  gaslessOnboarding: GaslessOnboarding | undefined;
+  web3AuthProvider: SafeEventEmitterProvider | undefined;
+  gaslessWallet: GaslessWallet | undefined;
+  address: string | undefined;
+  userInfo: Partial<UserInfo> | null | undefined;
 }
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
@@ -37,14 +41,7 @@ const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 const QUOTER2_ADDRESS = '0x61fFE014bA17989E743c5F6cB21bF9697530B21e'
 
 const RangeProp: NextPage<Props> = (props: Props) => {
-  const [gaslessOnboarding, setGaslessOnboarding] =
-    useState<GaslessOnboarding>();
-  const [web3AuthProvider, setWeb3AuthProvider] =
-    useState<SafeEventEmitterProvider>();
-  const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
-  const [address, setAddress] = useState("");
-  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
-  const [qrCode, setQRCode] = useState<string | null>();
+
   const comp = useRef<HTMLDivElement>(null);
   const [givenValue, setGivenValue] = useState<string>()
   const [targetValue, setTargetValue] = useState<string>()
@@ -69,40 +66,11 @@ const RangeProp: NextPage<Props> = (props: Props) => {
   // }
 
 
-  const login = async () => {
-    try {
-      const gaslessOnboarding = new GaslessOnboarding(
-        loginConfig as LoginConfig,
-        gaslessWalletConfig as GaslessWalletConfig
-      );
-      await gaslessOnboarding.init();
-
-      const web3AuthProvider = await gaslessOnboarding.login();
-      setWeb3AuthProvider(web3AuthProvider);
-      setGaslessOnboarding(gaslessOnboarding);
-
-
-      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
-      setGaslessWallet(gaslessWallet);
-
-      const address = gaslessWallet.getAddress();
-      setAddress(address);
-      console.log(address);
-
-
-      const userInfo = await gaslessOnboarding.getUserInfo();
-      setUserInfo(userInfo);
-      console.log(userInfo);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // const getEhereumContract = async () => {
   //   if (web3AuthProvider) {
   //     const provider = new ethers.providers.Web3Provider(web3AuthProvider);
   //     const signer = provider.getSigner();
-    
+
 
   //   const dataContract = new ethers.Contract(transactionAddress, transactionABI, signer)
 
@@ -115,8 +83,8 @@ const RangeProp: NextPage<Props> = (props: Props) => {
       if (givenValue) {
         const wei = ethers.utils.parseEther(givenValue)
 
-        if (web3AuthProvider) {
-          const provider = new ethers.providers.Web3Provider(web3AuthProvider);
+        if (props.web3AuthProvider) {
+          const provider = new ethers.providers.Web3Provider(props.web3AuthProvider);
           const signer = provider.getSigner();
 
           const tempaddress = await signer.getAddress();
@@ -142,17 +110,41 @@ const RangeProp: NextPage<Props> = (props: Props) => {
   }
 
   const cancelOrder = async () => {
+    try {
+      if (props.web3AuthProvider) {
+        const provider = new ethers.providers.Web3Provider(props.web3AuthProvider);
+        const contract = await new ethers.Contract(dataStoreContract, dataStoreContractABI, provider)
+        let y = await contract.getMemberCount();
+        y = (ethers.utils.formatUnits(y))
+        y = y * (10 ** 18)
+        console.log(y)
+        var index;
+        for (let i = 0; i < y; i++) {
+          let x = await contract.orderMembers(i);
+          if (x === props.address)
+            index = i;
+        }
+        let dataStore = new ethers.utils.Interface(dataStoreContractABI)
+        let x = dataStore.encodeFunctionData("swapDone", [props.address, index])
+        console.log(x)
 
+        const res = await props.gaslessWallet?.sponsorTransaction(
+          dataStoreContract,
+          x
+        )
+        console.log(res?.taskId)
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const getPrice = async () => {
-
-
     try {
       if (givenValue) {
-        if (web3AuthProvider) {
+        if (props.web3AuthProvider) {
 
-          const provider = new ethers.providers.Web3Provider(web3AuthProvider)
+          const provider = new ethers.providers.Web3Provider(props.web3AuthProvider)
           console.log(provider)
 
           const quoter2 = new ethers.Contract(
@@ -181,20 +173,18 @@ const RangeProp: NextPage<Props> = (props: Props) => {
   }
   const random = async () => {
     try {
-      let param={
-        givenValue:ethers.utils.parseEther('1'),
-        targetValue:ethers.utils.parseEther('4')
-      }
-      let dataStore=new ethers.utils.Interface(dataStoreContractABI)
-      let x=dataStore.encodeFunctionData("swapStart",[ethers.utils.parseEther('1'),ethers.utils.parseEther('4')])
-      console.log(x)
+      if (givenValue && targetValue && props.web3AuthProvider) {
+        
+        let dataStore = new ethers.utils.Interface(dataStoreContractABI)
+        let x = dataStore.encodeFunctionData("swapStart", [ethers.utils.parseEther(givenValue), ethers.utils.parseEther(targetValue)])
+        console.log(x)
 
-      const res =await gaslessWallet?.sponsorTransaction(
-        dataStoreContract,
-        x
-      )
-      console.log(res?.taskId)
-      
+        const res = await props.gaslessWallet?.sponsorTransaction(
+          dataStoreContract,
+          x
+        )
+        console.log(res?.taskId)
+      }
     } catch (error) {
       console.error(error)
     }
@@ -202,8 +192,8 @@ const RangeProp: NextPage<Props> = (props: Props) => {
 
 
   useEffect(() => {
-    login()
-    console.log(userInfo)
+
+    console.log(props.userInfo)
   }, [])
 
   useEffect(() => {

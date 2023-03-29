@@ -19,8 +19,8 @@ const swapRouterAddress='0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
 
 const chainId=5
 
-const web3Provider=new ethers.providers.JsonRpcProvider(ALCHEMY_URL_TESTNET)
-const router=new AlphaRouter({chainId:chainId,provider:web3Provider})
+//const web3Provider=new ethers.providers.JsonRpcProvider(ALCHEMY_URL_TESTNET)
+//const router=new AlphaRouter({chainId:chainId,provider:web3Provider})
 
 const name0='Wrapped Ether'
 const symbol0='WETH'
@@ -148,8 +148,10 @@ async function main(){
         console.log(newTransaction)
     })
 }
+function time(){
+    const deadline = Math.floor(Date.now() / 1000) + (60 * 10)
+}
 
-
-
-getPrice(inputAmount,slippageAmount,deadline,WALLET_ADDRESS)
+time()
+//getPrice(inputAmount,slippageAmount,deadline,WALLET_ADDRESS)
 //main()

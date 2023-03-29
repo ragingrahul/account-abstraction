@@ -4,9 +4,71 @@ import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import StakeProp from "@/components/Stake";
 import RangeProp from "@/components/Range";
+import {
+  GaslessOnboarding,
+  GaslessWalletConfig,
+  LoginConfig,
+} from "@gelatonetwork/gasless-onboarding";
+import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
+import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
+import { ethers } from "ethers";
+
+const gaslessWalletConfig = {
+  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+};
+const loginConfig = {
+  domains: ["http://localhost:3000"],
+  chain: {
+    id: 5,
+    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+  },
+  openLogin: {
+    redirectUrl: "http://localhost:3000",
+  },
+};
 
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("stake");
+  const [gaslessOnboarding, setGaslessOnboarding] =
+    useState<GaslessOnboarding>();
+  const [web3AuthProvider, setWeb3AuthProvider] =
+    useState<SafeEventEmitterProvider>();
+  const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
+  const [address, setAddress] = useState("");
+  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
+  const [qrCode, setQRCode] = useState<string | null>();
+  
+  const login = async () => {
+    try {
+      const gaslessOnboarding = new GaslessOnboarding(
+        loginConfig as LoginConfig,
+        gaslessWalletConfig as GaslessWalletConfig
+      );
+      await gaslessOnboarding.init();
+
+      const web3AuthProvider = await gaslessOnboarding.login();
+      setWeb3AuthProvider(web3AuthProvider);
+      setGaslessOnboarding(gaslessOnboarding);
+
+
+      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
+      setGaslessWallet(gaslessWallet);
+
+      const address = gaslessWallet.getAddress();
+      setAddress(address);
+      console.log(address);
+
+
+      const userInfo = await gaslessOnboarding.getUserInfo();
+      setUserInfo(userInfo);
+      console.log(userInfo);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(()=>{
+    login();
+  },[])
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -52,7 +114,7 @@ export default function Wallet() {
             <StakeProp Class={menuToggle === "stake" ? "active" : "inactive"} />
           )}
           {menuToggle === "range" && (
-            <RangeProp Class={menuToggle === "range" ? "active" : "inactive"} />
+            <RangeProp Class={menuToggle === "range" ? "active" : "inactive"} gaslessOnboarding={gaslessOnboarding} web3AuthProvider={web3AuthProvider} gaslessWallet={gaslessWallet} address={address} userInfo={userInfo}/>
           )}
 
           <div className="flex flex-col flex-grow w-[100%] justify-end">
