@@ -4,7 +4,7 @@ import Image from "next/image";
 interface Props {
   Symbol: string;
   Name: string;
-  Balance: number;
+  Balance: string;
   Class: string;
 }
 
@@ -22,7 +22,7 @@ const Listing: NextPage<Props> = (props: Props) => {
         </h1>
       </div>
       <h1 className="font-[GrayfelDemi] text-[#ffffff] mr-8 text-[1.75rem]">
-        {props.Balance + " $"}
+        {props.Balance}
       </h1>
     </div>
   );
