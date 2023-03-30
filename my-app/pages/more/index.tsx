@@ -44,7 +44,7 @@ export default function Wallet() {
   const [isLoadingRange, setIsLoadingRange] = useState(false);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
-  
+
 
   const login = async () => {
     try {
@@ -60,7 +60,7 @@ export default function Wallet() {
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
         },
         openLogin: {
-          redirectUrl: window.location.origin,
+          redirectUrl: "",
         },
       };
       const gaslessOnboarding = new GaslessOnboarding(
