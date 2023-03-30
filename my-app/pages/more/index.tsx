@@ -16,20 +16,6 @@ import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
 import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../../constants";
 
-const gaslessWalletConfig = {
-  apiKey: ONEBALANCE_API_KEY,
-};
-const loginConfig = {
-  domains: ["https://gelato-account-abstraction.vercel.app/"],
-  chain: {
-    id: 5,
-    rpcUrl: ALCHEMY_RPC_URL,
-  },
-  openLogin: {
-    redirectUrl: "",
-  },
-};
-
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("stake");
   const [gaslessOnboarding, setGaslessOnboarding] =
@@ -48,6 +34,20 @@ export default function Wallet() {
 
   const login = async () => {
     try {
+      if (typeof window === "undefined") throw new Error("window is undefined");
+      const gaslessWalletConfig = {
+        apiKey: ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       setIsLoading(true);
 
       const gaslessOnboarding = new GaslessOnboarding(
