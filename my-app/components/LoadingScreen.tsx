@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Image from "next/image";
 import GifLoad from "../public/Loading.gif";
 
+
 interface Props {
   isLoading: boolean;
   title: string;

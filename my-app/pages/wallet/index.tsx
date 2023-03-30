@@ -103,7 +103,20 @@ export default function Wallet() {
       };
 
       setIsLoading(true);
-
+      if (typeof window === "undefined") throw new Error("window is undefined");
+      const gaslessWalletConfig = {
+        apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig

@@ -16,6 +16,7 @@ import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
 import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../../constants";
 
+
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("stake");
   const [gaslessOnboarding, setGaslessOnboarding] =
@@ -31,6 +32,7 @@ export default function Wallet() {
   const [isLoadingRange, setIsLoadingRange] = useState(false);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
+
 
   const login = async () => {
     try {
@@ -49,7 +51,20 @@ export default function Wallet() {
         },
       };
       setIsLoading(true);
-
+      if (typeof window === "undefined") throw new Error("window is undefined");
+      const gaslessWalletConfig = {
+        apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
