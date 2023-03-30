@@ -108,7 +108,7 @@ export default function Wallet() {
         apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
       };
       const loginConfig = {
-        domains: ["https://simpl-app-git-main-ragingrahul.vercel.app"],
+        domains: [window.location.origin],
         chain: {
           id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,

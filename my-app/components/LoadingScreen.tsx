@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Image from "next/image";
+import Loading from "public/Loading.gif";
 
 interface Props {
   isLoading: boolean;
@@ -45,7 +46,7 @@ const LoadingProp: NextPage<Props> = (props: Props) => {
           </h1>
           <div className="bg-[#131313] h-[100px] w-[485px] mt-4 rounded-2xl border-[0.2px] border-[#4c4c4c] flex p-3 py-5 items-center">
             <Image
-              src="/loading.gif"
+              src={Loading}
               width={50}
               height={50}
               alt="Loading"

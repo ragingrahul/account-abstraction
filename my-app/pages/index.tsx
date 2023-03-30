@@ -36,7 +36,7 @@ export default function Home() {
       setIsLoading(true);
       if (typeof window === "undefined") throw new Error("window is undefined");
       const loginConfig = {
-        domains: ["https://simpl-app-git-main-ragingrahul.vercel.app"],
+        domains: [window.location.origin],
         chain: {
           id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
