@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import Listing from "./Listing";
-import { stakeContract, stakeContractABI } from "@/constants";
+import { stakeContract, stakeContractABI } from "../constants/index";
 import { ethers, Signer } from "ethers";
 import { useEffect, useState } from "react";
 import { SafeEventEmitterProvider } from "@web3auth/base";

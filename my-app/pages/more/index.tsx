@@ -14,7 +14,7 @@ import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
-
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../../constants";
 
 
 export default function Wallet() {
@@ -36,6 +36,20 @@ export default function Wallet() {
 
   const login = async () => {
     try {
+      if (typeof window === "undefined") throw new Error("window is undefined");
+      const gaslessWalletConfig = {
+        apiKey: ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       setIsLoading(true);
       if (typeof window === "undefined") throw new Error("window is undefined");
       const gaslessWalletConfig = {

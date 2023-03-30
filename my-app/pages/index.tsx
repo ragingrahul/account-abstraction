@@ -16,12 +16,9 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { gsap } from "gsap";
 import LoadingProp from "@/components/LoadingScreen";
 import Blog from "@/components/Blog";
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
 
 const inter = Inter({ subsets: ["latin"] });
-
-const gaslessWalletConfig = {
-  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
-};
 
 
 export default function Home() {
@@ -33,6 +30,20 @@ export default function Home() {
 
   const login = async () => {
     try {
+      if (typeof window === "undefined") throw new Error("window is undefined");
+      const gaslessWalletConfig = {
+        apiKey: ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       setIsLoading(true);
       if (typeof window === "undefined") throw new Error("window is undefined");
       const loginConfig = {
