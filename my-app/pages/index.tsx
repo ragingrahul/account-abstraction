@@ -16,7 +16,7 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { gsap } from "gsap";
 import LoadingProp from "@/components/LoadingScreen";
 import Blog from "@/components/Blog";
-import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "./constants";
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
 
 const inter = Inter({ subsets: ["latin"] });
 

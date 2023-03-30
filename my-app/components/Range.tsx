@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 const {
   abi: Quoter2Abi,
 } = require("@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json");
-import { dataStoreContract, dataStoreContractABI } from "@/constants";
+import { dataStoreContract, dataStoreContractABI } from "../constants/index";
 
 interface Props {
   Class: string;

@@ -14,7 +14,7 @@ import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
-import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../../constants";
 
 const gaslessWalletConfig = {
   apiKey: ONEBALANCE_API_KEY,

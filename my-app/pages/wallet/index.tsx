@@ -17,8 +17,8 @@ import {
 import LoadingProp from "@/components/LoadingScreen";
 import { BigNumber, ethers } from "ethers";
 import { useContract, useTokenBalance } from "@thirdweb-dev/react";
-import { ERC20ABI } from "@/constants";
-import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
+import { ERC20ABI } from "../constants/index";
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../../constants";
 
 const gaslessWalletConfig = {
   apiKey: ONEBALANCE_API_KEY,
