@@ -22,16 +22,7 @@ const inter = Inter({ subsets: ["latin"] });
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
 };
-const loginConfig = {
-  domains: [window.location.origin],
-  chain: {
-    id: 5,
-    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
-  },
-  openLogin: {
-    redirectUrl: window.location.origin,
-  },
-};
+
 
 export default function Home() {
   const [blog1IsLoading, setBlog1IsLoading] = useState(false);
@@ -42,6 +33,16 @@ export default function Home() {
   const login = async () => {
     try {
       setIsLoading(true);
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: window.location.origin,
+        },
+      };
 
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,

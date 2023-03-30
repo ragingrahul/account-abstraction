@@ -103,6 +103,19 @@ export default function Wallet() {
     try {
       setIsLoading(true);
 
+      const gaslessWalletConfig = {
+        apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+      };
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+        },
+        openLogin: {
+          redirectUrl: "",
+        },
+      };
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
