@@ -163,10 +163,50 @@ export const stakeContractABI = [
         type: "address",
       },
       {
-        "internalType": "uint256",
-        "name": "targetValue",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "unstakeToken",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "issueTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+    ],
+    name: "stakeTokens",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "stakers",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -187,10 +227,47 @@ export const stakeContractABI = [
         type: "uint256",
       },
       {
-        "internalType": "uint256",
-        "name": "targetvalue",
-        "type": "uint256"
-      }
+        internalType: "bool",
+        name: "hasStaked",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "token",
+    outputs: [
+      {
+        internalType: "contract TokenERC20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokensPerGETH",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
     ],
     name: "unstakeTokens",
     outputs: [],
