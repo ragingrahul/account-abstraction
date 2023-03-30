@@ -19,9 +19,9 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: imageRef.current,
-          start: "90% 80%",
+          start: "50% 50%",
           scrub: true,
-          end: "160% top",
+          end: "100% top",
         },
       });
       tl.to(imageRef.current, {
@@ -32,9 +32,9 @@ const LandingWindow: NextPage<Props> = (props: Props) => {
       const tl2 = gsap.timeline({
         scrollTrigger: {
           trigger: imageRef.current,
-          start: "90% 80%",
+          start: "50% 50%",
           scrub: true,
-          end: "160% top",
+          end: "100% top",
         },
       });
       tl2.to(bodyRef.current, {

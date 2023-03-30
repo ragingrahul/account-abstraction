@@ -4,7 +4,9 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
-interface Props {}
+interface Props {
+  login: () => void;
+}
 
 const SectionTwo: NextPage<Props> = (props: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -68,7 +70,10 @@ const SectionTwo: NextPage<Props> = (props: Props) => {
               No need to go through the hassle of buying crypto before <br />
               interacting with smart contracts.
             </h1>
-            <div className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]">
+            <div
+              className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]"
+              onClick={props.login}
+            >
               <h1 className="font-[Sarabun] text-lg font-bold">
                 Connect Wallet
               </h1>
