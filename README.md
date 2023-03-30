@@ -7,6 +7,10 @@ In addition to sending and receiving Ethereum, users can also STAKE their tokens
 
 Buy simpl tokens using eth and stake them on the wallet and reap rewards for doing that.
 
+## How the functions are Gasless
+
+![flow chart](https://cdn.discordapp.com/attachments/543401567391449098/1091051966085468221/My_First_Board1.jpg)
+
 Give target price for swapping eth for uniswap Token and wait for the price of UNI to rise and watch it get swapped automatically!!!
 ***
 ## Features:
