@@ -29,6 +29,7 @@ export default function Home() {
   const [blog2IsLoading, setBlog2IsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const comp = useRef<HTMLDivElement>(null);
+  
 
   const login = async () => {
     try {

@@ -19,6 +19,7 @@ import { BigNumber, ethers } from "ethers";
 import { useContract, useTokenBalance } from "@thirdweb-dev/react";
 import { ERC20ABI } from "@/constants";
 
+
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
 };

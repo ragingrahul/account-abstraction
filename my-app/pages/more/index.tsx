@@ -44,6 +44,7 @@ export default function Wallet() {
   const [isLoadingRange, setIsLoadingRange] = useState(false);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
+  
 
   const login = async () => {
     try {
