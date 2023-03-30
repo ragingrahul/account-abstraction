@@ -19,13 +19,13 @@ const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
 };
 const loginConfig = {
-  domains: ["http://localhost:3000"],
+  domains: [window.location.origin],
   chain: {
     id: 5,
     rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
   },
   openLogin: {
-    redirectUrl: "http://localhost:3000",
+    redirectUrl: window.location.origin,
   },
 };
 
