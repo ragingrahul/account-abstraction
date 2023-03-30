@@ -44,7 +44,7 @@ const LoadingProp: NextPage<Props> = (props: Props) => {
             Loading Status
           </h1>
           <div className="bg-[#131313] h-[100px] w-[485px] mt-4 rounded-2xl border-[0.2px] border-[#4c4c4c] flex p-3 py-5 items-center">
-            <Image
+            <img
               src="/loading.gif"
               width={50}
               height={50}
