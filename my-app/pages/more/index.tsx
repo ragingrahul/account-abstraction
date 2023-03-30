@@ -14,15 +14,16 @@ import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
+import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
 
 const gaslessWalletConfig = {
-  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
+  apiKey: ONEBALANCE_API_KEY,
 };
 const loginConfig = {
   domains: ["http://localhost:3000"],
   chain: {
     id: 5,
-    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
+    rpcUrl: ALCHEMY_RPC_URL,
   },
   openLogin: {
     redirectUrl: "http://localhost:3000",
