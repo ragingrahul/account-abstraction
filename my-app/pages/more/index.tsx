@@ -40,6 +40,10 @@ export default function Wallet() {
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingStake, setIsLoadingStake] = useState(false);
+  const [isLoadingRange, setIsLoadingRange] = useState(false);
+  const [isLoadingLogout, setIsLoadingLogout] = useState(false);
+  const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
 
   const login = async () => {
     try {
@@ -77,6 +81,18 @@ export default function Wallet() {
     login();
   }, []);
 
+  const logout = async () => {
+    setIsLoadingLogout(true);
+    await gaslessOnboarding?.logout();
+
+    setGaslessOnboarding(undefined);
+    setWeb3AuthProvider(undefined);
+    setGaslessWallet(undefined);
+    setAddress("");
+
+    window.location.href = "/";
+  };
+
   useEffect(() => {
     const tl = gsap.timeline();
     tl.set(".active", { opacity: 0, scale: 0 });
@@ -103,7 +119,10 @@ export default function Wallet() {
           className="h-[48px] w-[160px] ml-[5vw]"
         />
         <div className="flex w-fit h-fit mr-[5vw] items-center">
-          <div className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl">
+          <div
+            className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
+            onClick={logout}
+          >
             <h1 className="font-[Sarabun] text-lg font-bold">Logout</h1>
           </div>
           <Image
@@ -123,6 +142,8 @@ export default function Wallet() {
               address={address}
               web3AuthProvider={web3AuthProvider}
               gaslessWallet={gaslessWallet}
+              setIsLoadingStake={setIsLoadingStake}
+              setIsLoadingUnstake={setIsLoadingUnstake}
             />
           )}
           {menuToggle === "range" && (
@@ -225,6 +246,27 @@ export default function Wallet() {
         desc="Processing sign in through Web3Auth"
         login={login}
         isLogin={true}
+      />
+      <LoadingProp
+        isLoading={isLoadingStake}
+        title="Staking"
+        desc="Staking your tokens"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingUnstake}
+        title="Unstaking"
+        desc="Unstaking your tokens"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingLogout}
+        title="Logging Out"
+        desc="Logging out from Web3Auth"
+        login={login}
+        isLogin={false}
       />
     </div>
   );

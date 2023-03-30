@@ -6,11 +6,7 @@ import {
   GaslessWalletConfig,
   LoginConfig,
 } from "@gelatonetwork/gasless-onboarding";
-import { ethers } from "ethers";
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
-import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
-import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
-import QRCode from "qrcode";
+import { useEffect, useState, useRef } from "react";
 import LandingWindow from "@/components/LandingWindow";
 import SectionOne from "@/components/SectionOne";
 import SectionTwo from "@/components/SectionTwo";
@@ -19,6 +15,7 @@ import SectionFour from "@/components/SectionFour";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { gsap } from "gsap";
 import LoadingProp from "@/components/LoadingScreen";
+import Blog from "@/components/Blog";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,14 +34,8 @@ const loginConfig = {
 };
 
 export default function Home() {
-  const [gaslessOnboarding, setGaslessOnboarding] =
-    useState<GaslessOnboarding>();
-  const [web3AuthProvider, setWeb3AuthProvider] =
-    useState<SafeEventEmitterProvider>();
-  const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
-  const [address, setAddress] = useState("");
-  const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
-  const [qrCode, setQRCode] = useState<string | null>();
+  const [blog1IsLoading, setBlog1IsLoading] = useState(false);
+  const [blog2IsLoading, setBlog2IsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const comp = useRef<HTMLDivElement>(null);
 
@@ -56,24 +47,12 @@ export default function Home() {
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
       );
+
       await gaslessOnboarding.init();
 
-      const web3AuthProvider = await gaslessOnboarding.login();
-      setWeb3AuthProvider(web3AuthProvider);
-      setGaslessOnboarding(gaslessOnboarding);
+      await gaslessOnboarding.login();
 
       setIsLoading(false);
-
-      const gaslessWallet = gaslessOnboarding.getGaslessWallet();
-      setGaslessWallet(gaslessWallet);
-
-      const address = gaslessWallet.getAddress();
-      setAddress(address);
-      console.log(address);
-      generateQRCode(address);
-
-      const userInfo = await gaslessOnboarding.getUserInfo();
-      setUserInfo(userInfo);
 
       window.location.href = "/wallet";
     } catch (error) {
@@ -81,19 +60,6 @@ export default function Home() {
 
       setIsLoading(false);
     }
-  };
-
-  const generateQRCode = (address: string) => {
-    QRCode.toDataURL(address).then((url: string) => setQRCode(url));
-  };
-
-  const logout = async () => {
-    await gaslessOnboarding?.logout();
-
-    setGaslessOnboarding(undefined);
-    setWeb3AuthProvider(undefined);
-    setGaslessWallet(undefined);
-    setAddress("");
   };
 
   useEffect(() => {
@@ -111,10 +77,32 @@ export default function Home() {
       ref={comp}
     >
       <LandingWindow login={login} />
-      <SectionOne />
-      <SectionTwo />
-      <SectionThree />
-      <SectionFour />
+      <SectionOne setIsLoading={setBlog1IsLoading} />
+      <SectionTwo login={login} />
+      <SectionThree setIsLoading={setBlog2IsLoading} />
+      <SectionFour login={login} />
+      {blog1IsLoading && (
+        <Blog
+          setIsLoading={setBlog1IsLoading}
+          serial="1"
+          title="The problem Simpl wallet solves"
+          desc="Simpl Wallet will allow users without eth to interact with ethereum
+            using other tokens. Easy onboarding for early and existing users;
+            users do not need to go through the hassle of buying eth before
+            interacting with smart contracts. Initial payment not required to
+            generate the smart address or use the wallet. No payment required,
+            not now, not EVER! The smart wallet address only exist when a
+            transaction is being performed"
+        />
+      )}
+      {blog2IsLoading && (
+        <Blog
+          setIsLoading={setBlog2IsLoading}
+          serial="2"
+          title="Account Abstraction Will Change Web3 UX Forever"
+          desc="Performing actions on the blockchain today is typically slow and tedious. Every time you want to write new information to the blockchain, you sign a transaction from your EOA to do so. Once you're familiar with the process, this becomes the standard experience. For new users, however, it's a nightmare."
+        />
+      )}
       <LoadingProp
         isLoading={isLoading}
         title="Signing In"

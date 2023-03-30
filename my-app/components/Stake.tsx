@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Image from "next/image";
 import Listing from "./Listing";
 import { stakeContract, stakeContractABI } from "@/constants";
-import { ethers } from "ethers";
+import { ethers, Signer } from "ethers";
 import { useEffect, useState } from "react";
 import { SafeEventEmitterProvider } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
@@ -13,6 +13,8 @@ interface Props {
   address: string;
   web3AuthProvider: SafeEventEmitterProvider | undefined;
   gaslessWallet: GaslessWallet | undefined;
+  setIsLoadingStake: (value: React.SetStateAction<boolean>) => void;
+  setIsLoadingUnstake: (value: React.SetStateAction<boolean>) => void;
 }
 
 const StakeProp: NextPage<Props> = (props: Props) => {
@@ -48,32 +50,57 @@ const StakeProp: NextPage<Props> = (props: Props) => {
     if (props.web3AuthProvider == undefined) return;
     if (props.address == undefined) return;
 
-    let stake = new ethers.utils.Interface(stakeContractABI);
-    let x = stake.encodeFunctionData("stakeTokens", [props.address]);
-    console.log(x);
+    try {
+      props.setIsLoadingStake(true);
+      const provider = new ethers.providers.Web3Provider(
+        props.web3AuthProvider
+      );
+      const signer = provider.getSigner();
 
-    const res = await props.gaslessWallet?.sponsorTransaction(
-      stakeContract,
-      x,
-      ethers.utils.parseEther(amount)
-    );
+      let stake = new ethers.utils.Interface(stakeContractABI);
+      let x = stake.encodeFunctionData("stakeTokens", [props.address]);
+      console.log(x);
 
-    console.log(res?.taskId);
-    getStakeBalance();
+      const param = {
+        to: stakeContract,
+        from: props.address,
+        data: x,
+        value: parseEther(amount),
+        gasLimit: ethers.utils.hexlify(1000000),
+      };
+
+      const tx = await signer.sendTransaction(param);
+      console.log(tx);
+      getStakeBalance();
+      props.setIsLoadingStake(false);
+    } catch (error) {
+      console.log(error);
+      props.setIsLoadingStake(false);
+    }
   };
 
   const unstakeToken = async () => {
     if (props.web3AuthProvider == undefined) return;
     if (props.address == undefined) return;
 
-    let stake = new ethers.utils.Interface(stakeContractABI);
-    let x = stake.encodeFunctionData("unstakeTokens", [props.address]);
-    console.log(x);
+    try {
+      props.setIsLoadingUnstake(true);
+      let stake = new ethers.utils.Interface(stakeContractABI);
+      let x = stake.encodeFunctionData("unstakeTokens", [props.address]);
+      console.log(x);
 
-    const res = await props.gaslessWallet?.sponsorTransaction(stakeContract, x);
+      const res = await props.gaslessWallet?.sponsorTransaction(
+        stakeContract,
+        x
+      );
 
-    console.log(res?.taskId);
-    getStakeBalance();
+      console.log(res?.taskId);
+      getStakeBalance();
+      props.setIsLoadingUnstake(false);
+    } catch (error) {
+      console.log(error);
+      props.setIsLoadingUnstake(false);
+    }
   };
 
   useEffect(() => {

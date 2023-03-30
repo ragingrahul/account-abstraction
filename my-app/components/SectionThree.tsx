@@ -4,7 +4,9 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
-interface Props {}
+interface Props {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const SectionThree: NextPage<Props> = (props: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -81,7 +83,12 @@ const SectionThree: NextPage<Props> = (props: Props) => {
               Crypto for everyone - From curious to confident or from web2 to
               web3
             </h1>
-            <div className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]">
+            <div
+              className="transition ease-linear duration-300 bg-[#191919] rounded-lg text-[#ffffff] hover:text-[#191919] p-3 px-4 w-fit mt-10 border-[#06f2a8] hover:bg-[#06f2a8] hover:cursor-pointer border-[1px]"
+              onClick={() => {
+                props.setIsLoading(true);
+              }}
+            >
               <h1 className="font-[Sarabun] text-lg font-bold">Learn More</h1>
             </div>
           </div>
