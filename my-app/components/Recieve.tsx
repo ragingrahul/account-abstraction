@@ -44,12 +44,14 @@ const RecieveProp: NextPage<Props> = (props: Props) => {
         <h1 className="font-[GrayfelDemi] text-[#ffffff] ml-2">
           Your Wallet{" "}
           <span className="text-[#868686]">
-            {props.address.substring(0, 4) +
+            {"(" +
+              props.address.substring(0, 4) +
               "..." +
               props.address.substring(
                 props.address.length - 4,
                 props.address.length
-              )}
+              ) +
+              ")"}
           </span>
         </h1>
       </div>

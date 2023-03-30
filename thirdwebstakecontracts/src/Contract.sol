@@ -24,19 +24,18 @@ contract Contract {
         token = _erc20TokenAddress;
     }
 
-    function stakeTokens() public payable{
+    function stakeTokens(address _user) public payable{
         require(msg.value > 0, "amount cannot be 0");
-        address user = msg.sender;
         uint256 _amount = msg.value * tokensPerGETH;
 
-        if (!stakingInfo[msg.sender].hasStaked) {
-            stakers.push(msg.sender);
+        if (!stakingInfo[_user].hasStaked) {
+            stakers.push(_user);
         }
 
-        stakingInfo[msg.sender].stakingBalance += _amount;
-        stakingInfo[msg.sender].hasStaked = true;
+        stakingInfo[_user].stakingBalance += _amount;
+        stakingInfo[_user].hasStaked = true;
 
-        emit stakeToken(user, _amount);
+        emit stakeToken(_user, _amount);
     }
 
     function issueTokens() public {
@@ -51,13 +50,13 @@ contract Contract {
         emit issueToken("Tokens issued");
     }
 
-    function unstakeTokens() public {
-        uint256 balance = stakingInfo[msg.sender].stakingBalance;
+    function unstakeTokens(address _user) public {
+        uint256 balance = stakingInfo[_user].stakingBalance;
         require(balance > 0, "staking balance cannot be less than zero");
-        token.transfer(msg.sender, balance);
-        stakingInfo[msg.sender].stakingBalance = 0;
-        stakingInfo[msg.sender].hasStaked = false;
+        token.transfer(_user, balance);
+        stakingInfo[_user].stakingBalance = 0;
+        stakingInfo[_user].hasStaked = false;
 
-        emit unstakeToken(msg.sender, balance);
+        emit unstakeToken(_user, balance);
     }
 }

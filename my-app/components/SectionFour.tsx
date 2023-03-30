@@ -4,7 +4,9 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
-interface Props {}
+interface Props {
+  login: () => void;
+}
 
 const SectionFour: NextPage<Props> = (props: Props) => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -129,7 +131,7 @@ const SectionFour: NextPage<Props> = (props: Props) => {
         </h1>
         <div
           className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 mt-10  z-20 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
-          onClick={() => {}}
+          onClick={props.login}
         >
           <h1 className="font-[Sarabun] text-lg font-bold">Connect</h1>
         </div>

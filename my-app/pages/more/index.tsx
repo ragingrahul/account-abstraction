@@ -12,6 +12,8 @@ import {
 import { SafeEventEmitterProvider, UserInfo } from "@web3auth/base";
 import { GaslessWallet } from "@gelatonetwork/gasless-wallet";
 import { ethers } from "ethers";
+import Web3 from "web3";
+import LoadingProp from "@/components/LoadingScreen";
 
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
@@ -37,9 +39,16 @@ export default function Wallet() {
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
   const [qrCode, setQRCode] = useState<string | null>();
-  
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingStake, setIsLoadingStake] = useState(false);
+  const [isLoadingRange, setIsLoadingRange] = useState(false);
+  const [isLoadingLogout, setIsLoadingLogout] = useState(false);
+  const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
+
   const login = async () => {
     try {
+      setIsLoading(true);
+
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
@@ -50,25 +59,39 @@ export default function Wallet() {
       setWeb3AuthProvider(web3AuthProvider);
       setGaslessOnboarding(gaslessOnboarding);
 
+      setIsLoading(false);
 
       const gaslessWallet = gaslessOnboarding.getGaslessWallet();
       setGaslessWallet(gaslessWallet);
 
-      const address = gaslessWallet.getAddress();
+      const web3 = new Web3(web3AuthProvider as any);
+      const address = (await web3.eth.getAccounts())[0];
       setAddress(address);
       console.log(address);
 
-
       const userInfo = await gaslessOnboarding.getUserInfo();
       setUserInfo(userInfo);
-      console.log(userInfo);
     } catch (error) {
       console.log(error);
+      window.location.href = "/";
+      setIsLoading(false);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     login();
-  },[])
+  }, []);
+
+  const logout = async () => {
+    setIsLoadingLogout(true);
+    await gaslessOnboarding?.logout();
+
+    setGaslessOnboarding(undefined);
+    setWeb3AuthProvider(undefined);
+    setGaslessWallet(undefined);
+    setAddress("");
+
+    window.location.href = "/";
+  };
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -96,7 +119,10 @@ export default function Wallet() {
           className="h-[48px] w-[160px] ml-[5vw]"
         />
         <div className="flex w-fit h-fit mr-[5vw] items-center">
-          <div className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl">
+          <div
+            className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 border-[#06f2a8] bg-[#06f2a8] hover:cursor-pointer border-[1px] hover:shadow-[#06f2a8] hover:shadow-2xl"
+            onClick={logout}
+          >
             <h1 className="font-[Sarabun] text-lg font-bold">Logout</h1>
           </div>
           <Image
@@ -111,10 +137,24 @@ export default function Wallet() {
       <div className="w-[100vw] h-fit flex justify-center">
         <div className="h-[725px] w-[440px] bg-[#000000] rounded-[2rem] border-[10px] border-[#232323] flex flex-col items-center">
           {menuToggle === "stake" && (
-            <StakeProp Class={menuToggle === "stake" ? "active" : "inactive"} />
+            <StakeProp
+              Class={menuToggle === "stake" ? "active" : "inactive"}
+              address={address}
+              web3AuthProvider={web3AuthProvider}
+              gaslessWallet={gaslessWallet}
+              setIsLoadingStake={setIsLoadingStake}
+              setIsLoadingUnstake={setIsLoadingUnstake}
+            />
           )}
           {menuToggle === "range" && (
-            <RangeProp Class={menuToggle === "range" ? "active" : "inactive"} gaslessOnboarding={gaslessOnboarding} web3AuthProvider={web3AuthProvider} gaslessWallet={gaslessWallet} address={address} userInfo={userInfo}/>
+            <RangeProp
+              Class={menuToggle === "range" ? "active" : "inactive"}
+              gaslessOnboarding={gaslessOnboarding}
+              web3AuthProvider={web3AuthProvider}
+              gaslessWallet={gaslessWallet}
+              address={address}
+              userInfo={userInfo}
+            />
           )}
 
           <div className="flex flex-col flex-grow w-[100%] justify-end">
@@ -200,6 +240,34 @@ export default function Wallet() {
           </div>
         </div>
       </div>
+      <LoadingProp
+        isLoading={isLoading}
+        title="Signing In"
+        desc="Processing sign in through Web3Auth"
+        login={login}
+        isLogin={true}
+      />
+      <LoadingProp
+        isLoading={isLoadingStake}
+        title="Staking"
+        desc="Staking your tokens"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingUnstake}
+        title="Unstaking"
+        desc="Unstaking your tokens"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingLogout}
+        title="Logging Out"
+        desc="Logging out from Web3Auth"
+        login={login}
+        isLogin={false}
+      />
     </div>
   );
 }

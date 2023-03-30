@@ -108,3 +108,93 @@ export const dataStoreContractABI=[
     "type": "function"
   }
 ]
+export const stakeContract = "0x8590CFD32B4ADcEaD15d498Cf9DE10E51Ef58Eba";
+export const stakeContractABI = [
+  {
+    inputs: [
+      {
+        internalType: "contract TokenERC20",
+        name: "_erc20TokenAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "string",
+        name: "message",
+        type: "string",
+      },
+    ],
+    name: "issueToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "stakeToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetValue",
+        "type": "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "stakingInfo",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "stakingBalance",
+        type: "uint256",
+      },
+      {
+        "internalType": "uint256",
+        "name": "targetvalue",
+        "type": "uint256"
+      }
+    ],
+    name: "unstakeTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
