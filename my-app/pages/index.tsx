@@ -34,13 +34,13 @@ export default function Home() {
     try {
       setIsLoading(true);
       const loginConfig = {
-        domains: [window.location.origin],
+        domains: ["https://simpl-app-git-main-ragingrahul.vercel.app"],
         chain: {
           id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
         },
         openLogin: {
-          redirectUrl: window.location.origin,
+          redirectUrl: "",
         },
       };
 
