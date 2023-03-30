@@ -103,7 +103,7 @@ export default function Wallet() {
   const login = async () => {
     try {
       setIsLoading(true);
-
+      if (typeof window === "undefined") throw new Error("window is undefined");
       const gaslessWalletConfig = {
         apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
       };

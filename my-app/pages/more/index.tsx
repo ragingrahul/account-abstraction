@@ -37,12 +37,12 @@ export default function Wallet() {
   const login = async () => {
     try {
       setIsLoading(true);
-
+      if (typeof window === "undefined") throw new Error("window is undefined");
       const gaslessWalletConfig = {
         apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
       };
       const loginConfig = {
-        domains: ["https://simpl-app-git-main-ragingrahul.vercel.app"],
+        domains: [window.location.origin],
         chain: {
           id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,

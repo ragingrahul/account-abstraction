@@ -34,6 +34,7 @@ export default function Home() {
   const login = async () => {
     try {
       setIsLoading(true);
+      if (typeof window === "undefined") throw new Error("window is undefined");
       const loginConfig = {
         domains: ["https://simpl-app-git-main-ragingrahul.vercel.app"],
         chain: {
