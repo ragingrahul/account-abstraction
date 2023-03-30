@@ -15,19 +15,7 @@ import { ethers } from "ethers";
 import Web3 from "web3";
 import LoadingProp from "@/components/LoadingScreen";
 
-const gaslessWalletConfig = {
-  apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
-};
-const loginConfig = {
-  domains: [window.location.origin],
-  chain: {
-    id: 5,
-    rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
-  },
-  openLogin: {
-    redirectUrl: window.location.origin,
-  },
-};
+
 
 export default function Wallet() {
   const [menuToggle, setMenuToggle] = useState("stake");
