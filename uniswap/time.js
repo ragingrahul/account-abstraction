@@ -4,4 +4,15 @@ function time(){
     console.log(deadline)
 }
 
-time()
+function pppopo(){
+    let given="0.0"
+    if(given=="0.0"){
+        console.log(true)
+    }
+    else{
+        console.log(false)
+    }
+}
+
+//time()
+pppopo()

@@ -32,11 +32,11 @@ const Blog: NextPage<Props> = (props: Props) => {
           </div>
         </div>
         <div className="flex flex-col w-[50%] mr-[30vw]">
-          <h1 className="font-[Cotta] text-5xl mb-10 mt-10">
+          <h1 className="font-[Cotta] text-5xl mb-10 mt-10 text-white">
             {"Blog #" + props.serial}
           </h1>
-          <h1 className="font-[Cotta] text-8xl mb-10">{props.title}</h1>
-          <h1 className="font-[GrayfelDemi] text-4xl">{props.desc}</h1>
+          <h1 className="font-[Cotta] text-8xl mb-10 text-white">{props.title}</h1>
+          <h1 className="font-[GrayfelDemi] text-4xl text-white">{props.desc}</h1>
           <div
             className="transition ease-linear duration-300  rounded-lg text-[#191919] p-3 px-4 w-[75px] mt-10 border-[#ff4848] bg-[#ff4848] z-50 hover:cursor-pointer border-[1px] hover:shadow-[#ff4848] hover:shadow-2xl"
             onClick={() => {
