@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract DataStore2{
+contract DataStore3{
 
     struct info{
         uint256 givenvalue;
         uint256 targetvalue;
+        uint256 deadline;
     }
 
     address [] public orderMembers;
@@ -25,10 +26,11 @@ contract DataStore2{
         orderMembers.pop();
     }
 
-    function swapStart(uint256 givenValue,uint256 targetValue) public {
-        orderMembers.push(msg.sender);
-        userData[msg.sender].givenvalue=givenValue;
-        userData[msg.sender].targetvalue=targetValue;
+    function swapStart(uint256 givenValue,uint256 targetValue,address metamask,uint256 deadline) public {
+        orderMembers.push(metamask);
+        userData[metamask].givenvalue=givenValue;
+        userData[metamask].targetvalue=targetValue;
+        userData[metamask].deadline=deadline;
     }
 
     function swapDone(address receiver,uint256 index) public{
