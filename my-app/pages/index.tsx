@@ -20,13 +20,11 @@ import { ONEBALANCE_API_KEY, ALCHEMY_RPC_URL } from "../constants";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
 export default function Home() {
   const [blog1IsLoading, setBlog1IsLoading] = useState(false);
   const [blog2IsLoading, setBlog2IsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const comp = useRef<HTMLDivElement>(null);
-  
 
   const login = async () => {
     try {
@@ -38,18 +36,6 @@ export default function Home() {
         domains: [window.location.origin],
         chain: {
           id: 5,
-          rpcUrl: ALCHEMY_RPC_URL,
-        },
-        openLogin: {
-          redirectUrl: "",
-        },
-      };
-      setIsLoading(true);
-      if (typeof window === "undefined") throw new Error("window is undefined");
-      const loginConfig = {
-        domains: [window.location.origin],
-        chain: {
-          id: 5,
           rpcUrl: process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL,
         },
         openLogin: {
@@ -57,6 +43,7 @@ export default function Home() {
         },
       };
 
+      setIsLoading(true);
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
