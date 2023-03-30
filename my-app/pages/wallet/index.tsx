@@ -15,8 +15,9 @@ import {
   LoginConfig,
 } from "@gelatonetwork/gasless-onboarding";
 import LoadingProp from "@/components/LoadingScreen";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useContract, useTokenBalance } from "@thirdweb-dev/react";
+import { ERC20ABI } from "@/constants";
 
 const gaslessWalletConfig = {
   apiKey: process.env.NEXT_PUBLIC_ONEBALANCE_API_KEY,
@@ -48,18 +49,34 @@ export default function Wallet() {
   const [balance, setBalance] = useState<string | null>();
   const [EthBalance, setEthBalance] = useState<string>();
   const [SimplBalance, setSimplBalance] = useState<string>();
+  const [UniBalance,setUniBalance]=useState<string>()
   const { contract } = useContract(
     "0x2B8F9a05D88fBc5352885a15D241464b704b259A",
     "token"
   );
 
   const getBalance = async () => {
+    if(!web3AuthProvider)return
+    
     const web3 = new Web3(web3AuthProvider as any);
-
+    const provider=new ethers.providers.Web3Provider(web3AuthProvider)
     const address = (await web3.eth.getAccounts())[0];
     setAddress(address);
 
     if (!address) return;
+    const uniContract= new ethers.Contract(
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      ERC20ABI,
+      provider
+    )
+    const uniBalance=await uniContract.balanceOf(address)
+    // let tempunibalance:string=ethers.utils.formatUnits(uniBalance.value)
+    // let y:any=tempunibalance*(10**18)
+    setUniBalance(
+      ethers.utils.formatEther(uniBalance).toString().substring(0,7)
+    )
+
+    
     const SimplBalance = await contract?.balanceOf(address);
     setSimplBalance(
       SimplBalance
@@ -185,6 +202,7 @@ export default function Wallet() {
               address={address}
               EthBalance={EthBalance ? EthBalance : "0"}
               SimplBalance={SimplBalance ? SimplBalance : "0"}
+              UniBalance={UniBalance?UniBalance:"0"}
               balance={balance ? balance : "0"}
             />
           )}

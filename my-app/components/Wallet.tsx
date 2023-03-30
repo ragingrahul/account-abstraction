@@ -8,6 +8,7 @@ interface Props {
   balance: string;
   EthBalance: string;
   SimplBalance: string;
+  UniBalance:string;
 }
 
 const WalletProp: NextPage<Props> = (props: Props) => {
@@ -61,7 +62,7 @@ const WalletProp: NextPage<Props> = (props: Props) => {
       <Listing
         Symbol="UNI"
         Name="Uniswap Token"
-        Balance={"0"}
+        Balance={props.UniBalance}
         Class={props.Class}
       />
     </>
