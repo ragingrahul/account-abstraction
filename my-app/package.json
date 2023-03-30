@@ -26,7 +26,6 @@
     "ethers": "^5.7.2",
     "gsap": "^3.11.5",
     "next": "13.2.4",
-    "next-on-netlify": "^3.0.1",
     "qrcode": "^1.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
