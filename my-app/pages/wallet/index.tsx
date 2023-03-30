@@ -24,13 +24,13 @@ const gaslessWalletConfig = {
   apiKey: ONEBALANCE_API_KEY,
 };
 const loginConfig = {
-  domains: [window.location.origin],
+  domains: ["https://gelato-account-abstraction.vercel.app/"],
   chain: {
     id: 5,
     rpcUrl: ALCHEMY_RPC_URL,
   },
   openLogin: {
-    redirectUrl: window.location.origin,
+    redirectUrl: "",
   },
 };
 
