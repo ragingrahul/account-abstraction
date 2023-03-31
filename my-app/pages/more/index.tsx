@@ -25,10 +25,10 @@ export default function Wallet() {
   const [gaslessWallet, setGaslessWallet] = useState<GaslessWallet>();
   const [address, setAddress] = useState("");
   const [userInfo, setUserInfo] = useState<Partial<UserInfo> | null>();
-  const [qrCode, setQRCode] = useState<string | null>();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingStake, setIsLoadingStake] = useState(false);
   const [isLoadingRange, setIsLoadingRange] = useState(false);
+  const [isLoadingCancelRange, setIsLoadingCancelRange] = useState(false);
   const [isLoadingLogout, setIsLoadingLogout] = useState(false);
   const [isLoadingUnstake, setIsLoadingUnstake] = useState(false);
 
@@ -154,6 +154,8 @@ export default function Wallet() {
               gaslessWallet={gaslessWallet}
               address={address}
               userInfo={userInfo}
+              setIsLoading={setIsLoadingRange}
+              setIsLoadingCancel={setIsLoadingCancelRange}
             />
           )}
 
@@ -258,6 +260,20 @@ export default function Wallet() {
         isLoading={isLoadingUnstake}
         title="Unstaking"
         desc="Unstaking your tokens"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingRange}
+        title="Range Orders"
+        desc="Placing your range orders"
+        login={login}
+        isLogin={false}
+      />
+      <LoadingProp
+        isLoading={isLoadingCancelRange}
+        title="Range Orders"
+        desc="Placing your range orders"
         login={login}
         isLogin={false}
       />

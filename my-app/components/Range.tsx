@@ -22,6 +22,8 @@ interface Props {
   gaslessWallet: GaslessWallet | undefined;
   address: string | undefined;
   userInfo: Partial<UserInfo> | null | undefined;
+  setIsLoading: (value: React.SetStateAction<boolean>) => void;
+  setIsLoadingCancel: (value: React.SetStateAction<boolean>) => void;
 }
 
 const WETH_ADDRESS = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
@@ -40,6 +42,7 @@ const RangeProp: NextPage<Props> = (props: Props) => {
   const fee = "3000";
   const sqrtPriceLimitX96 = "0";
 
+  //Checks If the order is placed, if not then it will show the form
   const checkIfOrderPlaced = async () => {
     if (props.address && props.web3AuthProvider) {
       const newProvider = new ethers.providers.Web3Provider(
@@ -60,6 +63,7 @@ const RangeProp: NextPage<Props> = (props: Props) => {
     }
   };
 
+  //Sends Ethereum to the hardcoded receiver address, where swap happens
   const sendEth = async () => {
     try {
       if (givenValue) {
@@ -92,9 +96,11 @@ const RangeProp: NextPage<Props> = (props: Props) => {
     }
   };
 
+  //Cancel the order
   const cancelOrder = async () => {
     try {
       if (props.web3AuthProvider) {
+        props.setIsLoadingCancel(true);
         const provider = new ethers.providers.Web3Provider(
           props.web3AuthProvider
         );
@@ -123,12 +129,15 @@ const RangeProp: NextPage<Props> = (props: Props) => {
           x
         );
         console.log(res?.taskId);
+        props.setIsLoadingCancel(false);
       }
     } catch (error) {
       console.error(error);
+      props.setIsLoadingCancel(false);
     }
   };
 
+  //Get live price of Uniswap
   const getPrice = async () => {
     try {
       if (givenValue) {
@@ -161,9 +170,12 @@ const RangeProp: NextPage<Props> = (props: Props) => {
       console.error(error);
     }
   };
+
+  //Place the order
   const placeOrder = async () => {
     try {
       if (givenValue && targetValue && props.web3AuthProvider && deadline) {
+        props.setIsLoading(true);
         await sendEth();
         const provider = new ethers.providers.Web3Provider(
           props.web3AuthProvider
@@ -188,9 +200,11 @@ const RangeProp: NextPage<Props> = (props: Props) => {
           x
         );
         console.log(res?.taskId);
+        props.setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
+      props.setIsLoading(false);
     }
   };
 
