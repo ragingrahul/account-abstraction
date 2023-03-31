@@ -21,6 +21,7 @@ const StakeProp: NextPage<Props> = (props: Props) => {
   const [amount, setAmount] = useState("");
   const [stakeBalance, setStakeBalance] = useState("0");
 
+  //Get live balance of staked amount through contract
   const getStakeBalance = async () => {
     if (props.web3AuthProvider == undefined) return;
     if (!props.address) return;
@@ -46,6 +47,7 @@ const StakeProp: NextPage<Props> = (props: Props) => {
     console.log(props.address);
   };
 
+  //Stake tokens(Gas)
   const stakeToken = async () => {
     if (props.web3AuthProvider == undefined) return;
     if (props.address == undefined) return;
@@ -79,6 +81,7 @@ const StakeProp: NextPage<Props> = (props: Props) => {
     }
   };
 
+  //Unstake tokens(Gasless)
   const unstakeToken = async () => {
     if (props.web3AuthProvider == undefined) return;
     if (props.address == undefined) return;

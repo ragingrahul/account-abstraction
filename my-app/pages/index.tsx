@@ -26,6 +26,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const comp = useRef<HTMLDivElement>(null);
 
+  //Login through web3Auth
   const login = async () => {
     try {
       if (typeof window === "undefined") throw new Error("window is undefined");

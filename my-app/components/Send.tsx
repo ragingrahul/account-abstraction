@@ -16,6 +16,7 @@ const SendProp: NextPage<Props> = (props: Props) => {
   const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState("");
 
+  //Send certain amount of gETH to a certain address
   const sendTransaction = async () => {
     props.setIsLoading(true);
     const web3 = new Web3(props.web3AuthProvider as any);

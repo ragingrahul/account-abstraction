@@ -42,6 +42,7 @@ export default function Wallet() {
     "token"
   );
 
+  //Get Balance gEth, Simpl and Uni
   const getBalance = async () => {
     if (!web3AuthProvider) return;
 
@@ -85,6 +86,7 @@ export default function Wallet() {
     }
   }, [isLoading]);
 
+  //Login through web3Auth
   const login = async () => {
     try {
       if (typeof window === "undefined") throw new Error("window is undefined");
@@ -103,7 +105,7 @@ export default function Wallet() {
       };
 
       setIsLoading(true);
-      
+
       const gaslessOnboarding = new GaslessOnboarding(
         loginConfig as LoginConfig,
         gaslessWalletConfig as GaslessWalletConfig
@@ -133,10 +135,12 @@ export default function Wallet() {
     }
   };
 
+  //Generate QR Code
   const generateQRCode = (address: string) => {
     QRCode.toDataURL(address).then((url: string) => setQRCode(url));
   };
 
+  //Logout through web3Auth
   const logout = async () => {
     setIsLoadingLogout(true);
     await gaslessOnboarding?.logout();
